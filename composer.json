@@ -17,7 +17,12 @@
             "homepage":  "http://coolcsn.com/",
             "role":      "Developer"
         },
-	    {
+        {
+            "name":      "Stoyan Revov",
+            "email":     "st.revov@gmail.com",
+            "role":      "Developer"
+        },
+	{
             "name":      "Stoyan Petkov",
             "email":     "spalienkata21@gmail.com",
             "role":      "Developer"

@@ -1,62 +1,65 @@
-CsnCms
-=======
+CsnCms (WORK IN PROGRESS...)
+============================
+Zend Framework 2 Module
 
-**What is CsnCms?**
+### What is CsnCms? ###
+CsnCms is a Content Management System module based on `DoctrineORMModule`, `CsnUser` authentication and `CsnAuthorization`.
 
-CsnCms is a Module for CMS based on DoctrineORMModule
-
-**What exactly does CsnCms?**
-
-CsnCms has been created with educational purposes to demonstrate how CMS can be done. It is fully functional.
-
-**What's the use again?**
-
-Nothing but yet another CMS Module like ZfcUser.
+### What exactly does CsnCms do? ###
+CsnCms has been created with educational purposes to demonstrate how CMS can be done. It is fully functional, working in perfect harmony with *Doctrine* and the other Csn modules.
 
 Installation
-============
+------------
+1. Installation via composer is supported, simply run (make sure you've set `"minimum-stability": "dev"` in your *composer.json* file):
+`php composer.phar require coolcsn/csn-cms:dev-master`
 
-Installation via composer is supported, simply add the following line to your ```composer.json```
+2. Configure referenced modules ([CsnUser](https://github.com/coolcsn/CsnUser) and [CsnAuthorization](https://github.com/coolcsn/CsnAuthorization)) following their instructions.
 
-```
-"repositories": [
-	{
-		"type": "vcs",
-		"url": "https://github.com/coolcsn/CsnCms"
-	}
-],
-"require" : {
-    "coolcsn/csn-user": "dev-master"
-}
-```
+3. Import the sample SQL schema located in `./vendor/coolcsn/CsnCms/data/csnDatabase.sql`. You can easily do that with *PhpMyAdmin* for instance. There are 2 vesersions of the schema, depending on whether you have already imported the CsnUser sql schema.
 
-After adding to the composer's packagist.org (not ready yet)
-
-```
-"require" : {
-    "coolcsn/csn-user": "dev-master"
-}
-```
-
-An example application configuration could look like the following:
+4. Add 'CsnCms' to your application configuration in `config/application.config.php`. An example application configuration could look like the following:
 
 ```
 'modules' => array(
     'Application',
     'DoctrineModule',
     'DoctrineORMModule',
+    'CsnUser',
+    'CsnAuthorization',
     'CsnCms'
 )
 ```
 
-Configuration
-=============
+- **Important:** CsnCms requires setting a connection for Doctrine (if you haven't done this for some of your other modules). You can paste the following snippet in `config/autoload/doctrine.local.php`, replacing the tokens with your actual connection parameters:
 
-This Module doesn't require any special configuration. All that's needed is to set up a Connection for Doctrine.
+```
+return array(
+  'doctrine' => array(
+    'connection' => array(
+      'orm_default' => array(
+        'driverClass' =>'Doctrine\DBAL\Driver\PDOMySql\Driver',
+        'params' => array(
+          'host'     => 'localhost',
+          'port'     => '3306',
+          'user'     => 'username',
+          'password' => 'password',
+          'dbname'   => 'database',
+)))));
+```
+
+>### We are done, uh? ###
+Navigate to ***[hostname]/csn-cms***. Enjoy :)
 
 Dependencies
-============
-
+------------
 This Module depends on the following Modules:
 
- - DoctrineORMModule
+- DoctrineORMModule
+- CsnUser
+- CsnAuthorization
+
+Recommends
+----------
+- [coolcsn/CsnUser](https://github.com/coolcsn/CsnUser) - Authentication (login, registration) module.
+- [coolcsn/CsnAuthorization](https://github.com/coolcsn/CsnAuthorization) - Authorization module.
+- [coolcsn/CsnAclNavigation](https://github.com/coolcsn/CsnAclNavigation) - Navigation module;

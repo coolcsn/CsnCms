@@ -5,8 +5,8 @@ namespace CsnCms;
 return array(
 	'controllers' => array(
         'invokables' => array(
-        //    'CsnCms\Controller\Index' => 'CsnCms\Controller\IndexController',
-        //    'CsnCms\Controller\Translation' => 'CsnCms\Controller\TranslationController',
+            'CsnCms\Controller\Index' => 'CsnCms\Controller\IndexController',
+            'CsnCms\Controller\Translation' => 'CsnCms\Controller\TranslationController',
             'CsnCms\Controller\Comment' => 'CsnCms\Controller\CommentController',			
         ),
     ),	
