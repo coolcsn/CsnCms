@@ -1,0 +1,10 @@
+<?php
+echo '<h1>I am in add.phtml CsnCms CommentController</h1>';
+$form = $this->form;
+$form->prepare();
+$form->setAttribute('action', $this->url('csn-cms/default', array('controller' => 'comment', 'action' => 'add'), true));
+$form->setAttribute('method', 'post');
+
+echo $this->form()->openTag($form);
+echo $this->formCollection($form);
+echo $this->form()->closeTag();
