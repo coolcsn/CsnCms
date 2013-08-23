@@ -14,7 +14,7 @@ use Zend\Form\Annotation;
  * Article
  *
  * @ORM\Table(name="article")
- * @ORM\Entity(repositoryClass="CsnCms\Entity\Repository\ArticleRepository")
+ * @ORM\Entity
  * @Annotation\Name("Article")
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ClassMethods")
  */
@@ -40,15 +40,15 @@ class Article
     protected $parent = null;
 	
     /**
-     * @var CsnCms\Entity\Language
+     * @var CsnUser\Entity\Language
      *
-     * @ORM\ManyToOne(targetEntity="CsnCms\Entity\Language")
+     * @ORM\ManyToOne(targetEntity="CsnUser\Entity\Language")
      * @ORM\JoinColumn(name="language_id", referencedColumnName="id")
      * @Annotation\Type("DoctrineModule\Form\Element\ObjectSelect")
      * @Annotation\Options({
      * "label":"Language:",
      * "empty_option": "Please, choose your language",
-     * "target_class":"CsnCms\Entity\Language",
+     * "target_class":"CsnUser\Entity\Language",
      * "property": "name"})
      */
     protected $language;
@@ -70,14 +70,14 @@ class Article
     /**
      * @var CsnCms\Entity\Resource
      *
-	 * @ORM\ManyToOne(targetEntity="CsnCms\Entity\Resource")
-	 * @ORM\JoinColumn(name="resource_id", referencedColumnName="id")
-	 * @Annotation\Type("DoctrineModule\Form\Element\ObjectSelect")
-	 * @Annotation\Options({
-	 * "label":"Resource:",
-	 * "empty_option": "Please, choose the Resource",
-	 * "target_class":"CsnCms\Entity\Resource",
-	 * "property": "name"})
+     * @ORM\ManyToOne(targetEntity="CsnCms\Entity\Resource")
+     * @ORM\JoinColumn(name="resource_id", referencedColumnName="id")
+     * @Annotation\Type("DoctrineModule\Form\Element\ObjectSelect")
+     * @Annotation\Options({
+     * "label":"Resource:",
+     * "empty_option": "Please, choose the Resource",
+     * "target_class":"CsnCms\Entity\Resource",
+     * "property": "name"})
      */
     protected $resource;
 	
@@ -97,7 +97,7 @@ class Article
      * @var string
      *
      * @ORM\Column(name="slug", type="string", length=100, nullable=false)
-	 * @Annotation\Filter({"name":"StringTrim"})
+     * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":100}})
      * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[a-zA-Z][a-zA-Z0-9_-]{0,100}$/"}})
      * @Annotation\Attributes({"type":"text"})
@@ -157,7 +157,17 @@ class Article
      * @Annotation\Exclude()
      */
     protected $comments;
-	
+    
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="allow_comments", type="boolean", nullable=false)
+     * @Annotation\Type("Zend\Form\Element\Checkbox")
+     * @Annotation\Options({
+     * "label":"Allow comments:"})
+     */
+    protected $allowComments = true;
+    
     /**
      * @var integer
      *
@@ -178,7 +188,7 @@ class Article
     /**
      * Set language
      *
-     * @param CsnCms\Entity\Language $language
+     * @param CsnUser\Entity\Language $language
      * @return Article
      */
     public function setLanguage($language)
@@ -191,7 +201,7 @@ class Article
     /**
      * Get language
      *
-     * @return CsnCms\Entity\Language 
+     * @return CsnUser\Entity\Language 
      */
     public function getLanguage()
     {
@@ -557,7 +567,29 @@ class Article
     {
         return $this->comments;
     }
-	
+    
+    /**
+     * Get allowComments
+     *
+     * @return boolean
+     */
+    public function getAllowComments()
+    {
+        return $this->allowComments;
+    }
+    
+    /**
+     * Set allowComments
+     *
+     * @param boolean $allowComments
+     * @return Article
+     */
+    public function setAllowComments($allowComments)
+    {
+        $this->allowComments = $allowComments;
+        return $this;
+    }	
+    
     /**
      * Get Id
      *

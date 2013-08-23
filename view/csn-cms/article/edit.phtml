@@ -1,7 +1,7 @@
 <?php
 $form = $this->form;
 $form->prepare();
-$form->setAttribute('action', $this->url('csn-cms/default', array('controller' => 'index', 'action' => 'add')));
+$form->setAttribute('action', $this->url('csn-cms/default', array('controller' => 'article', 'action' => 'edit', 'id' => $this->id)));
 $form->setAttribute('method', 'post');
 
 echo $this->form()->openTag($form);
@@ -9,7 +9,7 @@ echo $this->formCollection($form);
 echo $this->form()->closeTag();
 
 // Take care of the JS
-/*
+
 $this->headLink()->appendStylesheet($this->basePath('css/jquery.datetimeentry.css'));
 $this->headScript()->prependFile('http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js');
 $this->headScript()->appendFile($this->basePath('js/jquery.datetimeentry.min.js'));
@@ -19,4 +19,3 @@ $this->headScript()->appendScript($script);
 
 $this->headScript()->appendFile('//tinymce.cachefly.net/4.0/tinymce.min.js');
 $this->headScript()->appendScript("tinymce.init({selector:'textarea'});"); 
-*/

@@ -20,15 +20,15 @@ use Zend\Form\Annotation;
 class Comment
 {	
     /**
-     * @var CsnCms\Entity\Language
+     * @var CsnUser\Entity\Language
      *
-	 * @ORM\ManyToOne(targetEntity="CsnCms\Entity\Language")
+	 * @ORM\ManyToOne(targetEntity="CsnUser\Entity\Language")
 	 * @ORM\JoinColumn(name="lannguage_id", referencedColumnName="id")
 	 * @Annotation\Type("DoctrineModule\Form\Element\ObjectSelect")
 	 * @Annotation\Options({
 	 * "label":"Language:",
 	 * "empty_option": "Please, choose your language",
-	 * "target_class":"CsnCms\Entity\Language",
+	 * "target_class":"CsnUser\Entity\Language",
 	 * "property": "name"})
      */
     private $language;
@@ -50,7 +50,7 @@ class Comment
     /**
      * @var CsnCms\Entity\Article
      *
-	 * @ORM\ManyToOne(targetEntity="CsnCms\Entity\Article", inversedBy="comment")
+	 * @ORM\ManyToOne(targetEntity="CsnCms\Entity\Article", inversedBy="comments")
 	 * @ORM\JoinColumn(name="article_id", referencedColumnName="id")
 	 * @Annotation\Type("DoctrineModule\Form\Element\ObjectSelect")
 	 * @Annotation\Options({
@@ -65,9 +65,9 @@ class Comment
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=100, nullable=false)
-	 * @Annotation\Filter({"name":"StringTrim"})
+     * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":100}})
-     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[a-zA-Z][a-zA-Z0-9_-]{0,24}$/"}})
+     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[a-zA-Z][a-zA-Z0-9_-]{0,100}$/"}})
      * @Annotation\Attributes({"type":"text"})
      * @Annotation\Options({"label":"Title:"})	 
      */
@@ -108,7 +108,7 @@ class Comment
     /**
      * Set language
      *
-     * @param CsnCms\Entity\Language $language
+     * @param CsnUser\Entity\Language $language
      * @return Article
      */
     public function setLanguage($language)
@@ -121,7 +121,7 @@ class Comment
     /**
      * Get language
      *
-     * @return CsnCms\Entity\Language 
+     * @return CsnUser\Entity\Language 
      */
     public function getLanguage()
     {

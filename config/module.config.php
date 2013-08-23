@@ -6,6 +6,7 @@ return array(
 	'controllers' => array(
         'invokables' => array(
             'CsnCms\Controller\Index' => 'CsnCms\Controller\IndexController',
+            'CsnCms\Controller\Article' => 'CsnCms\Controller\ArticleController',
             'CsnCms\Controller\Translation' => 'CsnCms\Controller\TranslationController',
             'CsnCms\Controller\Comment' => 'CsnCms\Controller\CommentController',			
         ),

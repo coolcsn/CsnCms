@@ -21,21 +21,21 @@ class Category
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=100, nullable=false)
-	 * @Annotation\Filter({"name":"StringTrim"})
+     * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":30}})
      * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[a-zA-Z][a-zA-Z0-9_-]{0,24}$/"}})
      * @Annotation\Attributes({"type":"text"})
      * @Annotation\Options({"label":"Category Name:"})	 
      */
-    private $name;
+    protected $name;
 
     /**
-	 * Bidirectional - Not neccessary !!! many category to many Article (INVERSE SIDE)
-	 *
-     * @ORM\ManyToMany(targetEntity="CsnCms\Entity\Article", mappedBy="category")
-	 * @Annotation\Exclude()
+     * Bidirectional - Not neccessary !!! many category to many Article (INVERSE SIDE)
+     *
+     * @ORM\ManyToMany(targetEntity="CsnCms\Entity\Article", mappedBy="categories")
+     * @Annotation\Exclude()
      */
-    private $article;
+    protected $articles;
 	
     /**
      * @var integer
@@ -45,10 +45,10 @@ class Category
      * @ORM\GeneratedValue(strategy="IDENTITY")
 	 * @Annotation\Exclude()
      */
-    private $id;
+    protected $id;
 
     public function __construct() {
-        $this->article = new ArrayCollection();
+        $this->articles = new ArrayCollection();
     }
 	
     /**
@@ -75,13 +75,13 @@ class Category
     }
 
     /**
-     * Get article
+     * Get articles
      *
      * @return array 
      */	
-    public function getArticle()
+    public function getArticles()
     {
-        return $this->article;
+        return $this->articles;
     }
 
     /**
@@ -89,15 +89,15 @@ class Category
      *
      * @return Collection 
      */	
-	public function addArticle(\CsnCms\Entity\Article $article) 
-	{
-		return $this->article[] = $article;
-	}
-	
-	public function removeArticle(\CsnCms\Entity\Article $article) 
-	{
-		$this->article->removeElement($article);
-	}
+    public function addArticle(\CsnCms\Entity\Article $article) 
+    {
+        return $this->articles[] = $article;
+    }
+
+    public function removeArticle(\CsnCms\Entity\Article $article) 
+    {
+        $this->articles->removeElement($article);
+    }
 	
     /**
      * Get Id

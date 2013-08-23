@@ -1,5 +1,5 @@
-CsnCms (WORK IN PROGRESS...)
-============================
+CsnCms
+======
 Zend Framework 2 Module
 
 ### What is CsnCms? ###
@@ -15,7 +15,7 @@ Installation
 
 2. Configure referenced modules ([CsnUser](https://github.com/coolcsn/CsnUser) and [CsnAuthorization](https://github.com/coolcsn/CsnAuthorization)) following their instructions.
 
-3. Import the sample SQL schema located in `./vendor/coolcsn/CsnCms/data/csnDatabase.sql`. You can easily do that with *PhpMyAdmin* for instance. There are 2 vesersions of the schema, depending on whether you have already imported the CsnUser sql schema.
+3. Import the sample SQL schema located in `./vendor/coolcsn/CsnCms/data/csnDatabase.sql`. You can easily do that with *PhpMyAdmin* for instance.
 
 4. Add 'CsnCms' to your application configuration in `config/application.config.php`. An example application configuration could look like the following:
 
