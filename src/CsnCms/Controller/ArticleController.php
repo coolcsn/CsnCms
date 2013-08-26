@@ -184,7 +184,7 @@ class ArticleController extends AbstractActionController
 	
     public function prepareData($artcile)
     {
-        $artcile->setArtcCreated(new \DateTime());
+        $artcile->setCreated(new \DateTime());
         $auth = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
         if ($auth->hasIdentity()) {
             $user = $auth->getIdentity();

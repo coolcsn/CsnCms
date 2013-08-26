@@ -1,12 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 4.0.4
--- http://www.phpmyadmin.net
---
--- Host: localhost
--- Generation Time: Aug 23, 2013 at 05:58 PM
--- Server version: 5.6.12-log
--- PHP Version: 5.4.12
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
@@ -36,16 +27,16 @@ CREATE TABLE IF NOT EXISTS `article` (
   `resource_id` int(11) DEFAULT NULL,
   `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `slug` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `introtext` longtext COLLATE utf8_unicode_ci,
-  `fulltext` longtext COLLATE utf8_unicode_ci,
   `created` datetime DEFAULT NULL,
   `allow_comments` tinyint(1) NOT NULL,
+  `intro_text` longtext COLLATE utf8_unicode_ci,
+  `full_text` longtext COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `IDX_23A0E66727ACA70` (`parent_id`),
   KEY `IDX_23A0E6682F1BAF4` (`language_id`),
   KEY `IDX_23A0E66A76ED395` (`user_id`),
   KEY `IDX_23A0E6689329D25` (`resource_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -182,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY (`id`),
   KEY `IDX_8D93D649D60322AC` (`role_id`),
   KEY `IDX_8D93D64982F1BAF4` (`language_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
 -- Constraints for dumped tables

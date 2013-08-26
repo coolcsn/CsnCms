@@ -87,7 +87,7 @@ class Article
      * @ORM\Column(name="title", type="string", length=100, nullable=false)
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":100}})
-     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[a-zA-Z][a-zA-Z0-9_-]{0,100}$/"}})
+     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[a-zA-Z][a-zA-Z0-9_ -]{0,100}$/"}})
      * @Annotation\Attributes({"type":"text"})
      * @Annotation\Options({"label":"Title:"})	 
      */
@@ -108,7 +108,7 @@ class Article
     /**
      * @var string
      *
-     * @ORM\Column(name="introtext", type="text", nullable=true)
+     * @ORM\Column(name="intro_text", type="text", nullable=true)
      * @Annotation\Attributes({"type":"textarea"})
      * @Annotation\Options({"label":"Intro Text:"})
      */
@@ -117,7 +117,7 @@ class Article
     /**
      * @var string
      *
-     * @ORM\Column(name="fulltext", type="text", nullable=true)
+     * @ORM\Column(name="full_text", type="text", nullable=true)
      * @Annotation\Attributes({"type":"textarea"})
      * @Annotation\Options({"label":"Full Text:"})	 
      */
