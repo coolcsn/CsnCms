@@ -28,13 +28,13 @@ class TranslationController extends AbstractActionController
         if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'index', 'action' => 'index'));		
 		
 		$entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
-		$dql = "SELECT a, u, l, c, h  FROM CsnCms\Entity\Article a LEFT JOIN a.author u LEFT JOIN a.language l LEFT JOIN a.category c LEFT JOIN a.children h WHERE a.id = ?1";
+		$dql = "SELECT a, u, l, c, h  FROM CsnCms\Entity\Article a LEFT JOIN a.author u LEFT JOIN a.language l LEFT JOIN a.categories c LEFT JOIN a.children h WHERE a.id = ?1";
 		$query = $entityManager->createQuery($dql);
 		$query->setMaxResults(30);
 		$query->setParameter(1, $id);
-		$article = $query->getResult();
+		$articles = $query->getResult();
 		
-		return new ViewModel(array('article' => $article, 'id' => $id));
+		return new ViewModel(array('articles' => $articles, 'id' => $id));
 	}
 
 	// C - create
@@ -162,9 +162,9 @@ class TranslationController extends AbstractActionController
 		$sm = $this->getServiceLocator();
 		$auth = $sm->get('Zend\Authentication\AuthenticationService');		
 		$config = $sm->get('Config');
-		$acl = new \CsnAuthorize\Acl\Acl($config);
+		$acl = new \CsnAuthorization\Acl\Acl($config);
 		// everyone is guest untill it gets logged in
-		$role = \CsnAuthorize\Acl\Acl::DEFAULT_ROLE;
+		$role = \CsnAuthorization\Acl\Acl::DEFAULT_ROLE;
 		if ($auth->hasIdentity()) {
 			$user = $auth->getIdentity();
 			$role = $user->getRole()->getName();
