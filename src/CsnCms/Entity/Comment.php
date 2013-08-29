@@ -23,7 +23,7 @@ class Comment
      * @var CsnUser\Entity\Language
      *
 	 * @ORM\ManyToOne(targetEntity="CsnUser\Entity\Language")
-	 * @ORM\JoinColumn(name="lannguage_id", referencedColumnName="id")
+	 * @ORM\JoinColumn(name="language_id", referencedColumnName="id")
 	 * @Annotation\Type("DoctrineModule\Form\Element\ObjectSelect")
 	 * @Annotation\Options({
 	 * "label":"Language:",
@@ -59,6 +59,7 @@ class Comment
 	 * "target_class":"CsnCms\Entity\Article",
 	 * "property": "article"})
      */
+	 
     private $article;
 
     /**
@@ -102,7 +103,11 @@ class Comment
     private $id;
 
     public function __construct() {
-
+	
+    }
+	public function __toString()
+	{
+        return $this->author . ' -> '.$this->text ;
     }
 
     /**
@@ -252,6 +257,8 @@ class Comment
     {
         return $this->id;
     }
+	
+	
 }
 
 /*

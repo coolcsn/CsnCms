@@ -17,7 +17,7 @@ $this->headTitle($title);
 <h1><?php echo $this->escapeHtml($title); ?></h1>
 <p>
 <!-- <a href="<?php echo $this->url('csn-cms/default', array('controller' => 'comment', 'action'=>'add')); /*NOtice without true no param is send*/?>">Add new translation</a> -->
-    <a href="<?php echo $this->url('csn-cms/default', array('controller' => 'index', 'action'=>'index'), false);?>">&lt; Back to the articles | </a>
+    <a href="<?php echo $this->url('csn-cms/default', array('controller' => 'article', 'action'=>'index'), false);?>">&lt; Back to the articles | </a>
     <a href="<?php echo $this->url('csn-cms/default', array('controller' => 'comment', 'action'=>'add'), true);?>">Add New Comment</a>
 </p>
 
@@ -33,16 +33,16 @@ $this->headTitle($title);
 
 <?php foreach ($comments as $comment) : ?>
 <tr>
-    <td><?php echo $this->escapeHtml($comment->getComTitle());?></td>
-    <td><?php echo $this->escapeHtml($comment->getComText());?></td>
-    <td><?php if (is_object($comment->getAuthor())) echo $this->escapeHtml($comment->getAuthor()->getUsrName());?></td>
-    <td><?php if (is_object($comment->getLanguage())) echo $this->escapeHtml($comment->getLanguage()->getLngName());?></td>
-    <td><?php if (is_object($comment->getComCreated())) echo $this->escapeHtml($comment->getComCreated()->format('Y-m-d H:i:s'));?></td><!-- Notice: getArtcCreated() returns an object convert to string -->
+    <td><?php echo $this->escapeHtml($comment->getTitle());?></td>
+    <td><?php echo $this->escapeHtml($comment->getText());?></td>
+    <td><?php if (is_object($comment->getAuthor())) echo $this->escapeHtml($comment->getAuthor()->getUsername());?></td>
+    <td><?php if (is_object($comment->getLanguage())) echo $this->escapeHtml($comment->getLanguage()->getName());?></td>
+    <td><?php if (is_object($comment->getCreated())) echo $this->escapeHtml($comment->getCreated()->format('Y-m-d H:i:s'));?></td><!-- Notice: getArtcCreated() returns an object convert to string -->
     <td>
         <a href="<?php echo $this->url('csn-cms/default', // SUPER IMPORTANT use csn-cms/<segment> NOT ONLY csn-cms
-            array('controller' => 'comment', 'action'=>'edit', 'id2' => $comment->getComId()), true);?>">Edit</a>
+            array('controller' => 'comment', 'action'=>'edit', 'id2' => $comment->getId()), true);?>">Edit</a>
         <a href="<?php echo $this->url('csn-cms/default', // SUPER IMPORTANT use csn-cms/<segment>
-            array('controller' => 'comment', 'action'=>'delete', 'id2' => $comment->getComId()), true);?>" onclick="return confirm('Do you rely want to delete the record?')">Delete</a>
+            array('controller' => 'comment', 'action'=>'delete', 'id2' => $comment->getId()), true);?>" onclick="return confirm('Do you really want to delete the record?')">Delete</a>
     </td>
 </tr>
 <?php endforeach; ?>

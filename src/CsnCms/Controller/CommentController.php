@@ -28,7 +28,7 @@ class CommentController extends AbstractActionController
         $id = (int) $this->params()->fromRoute('id', 0);
         if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'index', 'action' => 'index'));
 		$entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');	
-		$dql = "SELECT c, u, l, a  FROM CsnCms\Entity\Comment c LEFT JOIN c.author u LEFT JOIN c.language l LEFT JOIN c.article a WHERE a.article_id = ?1";
+		$dql = "SELECT c, u, l, a  FROM CsnCms\Entity\Comment c LEFT JOIN c.author u LEFT JOIN c.language l LEFT JOIN c.article a WHERE a.id = ?1";
 		$query = $entityManager->createQuery($dql);
 		$query->setMaxResults(30);
 		$query->setParameter(1, $id);
@@ -42,16 +42,17 @@ class CommentController extends AbstractActionController
 
     public function addAction()
     {
-        $id = (int) $this->params()->fromRoute('id', 0);
-        if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'index', 'action' => 'index'));
+		$id = (int) $this->params()->fromRoute('id', 0);
+        if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'article', 'action' => 'index'));
+		
 		$entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
 		$comment = new Comment;
-        try {
+		try {
 			$repository = $entityManager->getRepository('CsnCms\Entity\Article');
-			$article = $repository->findOneBy(array('article_id' => $id));			
+			$article = $repository->findOneBy(array('id' => $id));			
 			$comment->setArticle($article);
         }
-        catch (\Exception $ex) {
+		catch (\Exception $ex) {
            return $this->redirect()->toRoute('csn-cms/default', array(
                'controller' => 'index',
 				'action' => 'index'
@@ -63,6 +64,13 @@ class CommentController extends AbstractActionController
 		$form->remove('created');
 		$form->remove('author');
 		$form->remove('article');
+		$form->remove('language');		
+		
+		$repository = $entityManager->getRepository('CsnUser\Entity\Language');
+		$language = $repository->findOneBy(array('abbreviation' => 'en'));	
+		$comment->setLanguage($language);
+		
+		
 		foreach ($form->getElements() as $element){
 			if(method_exists($element, 'getProxy')){                
 				$proxy = $element->getProxy();
@@ -80,7 +88,6 @@ class CommentController extends AbstractActionController
 			'type'  => 'submit'
 		));
 		$form->add($send);
-
 		$form->bind($comment);
 
         $request = $this->getRequest();
@@ -94,10 +101,34 @@ class CommentController extends AbstractActionController
 			  }
 		}
 
-        return array(
+        return new ViewModel(array(
 			'id' => $id,
 			'form' => $form
-		);		
+		));
+		/*
+		
+		$entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+		$comment = new Comment;
+        //$article = new Article;
+        $form = $this->getForm($comment, $entityManager, 'Add');
+
+        $form->bind($comment);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+                $post = $request->getPost();
+                $form->setData($post);
+                if ($form->isValid()) {
+                    $this->prepareData($comment);
+                    $entityManager->persist($comment);
+                    $entityManager->flush();
+                    return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'comment', 'action' => 'index'));				
+                }
+        }
+		
+		//return new ViewModel(array('form' => $form,'id'=>$id));
+		/*		
+		/*/
 	}
 
     public function editAction()
@@ -136,7 +167,7 @@ class CommentController extends AbstractActionController
 			}           
 		}
 
-		$form->setHydrator(new DoctrineHydrator($entityManager,'GraceDrops\Entity\Comment'));
+		$form->setHydrator(new DoctrineHydrator($entityManager,'CsnCms\Entity\Comment'));
 		$send = new Element('send');
 		$send->setValue('Edit');
 		$send->setAttributes(array(
@@ -197,4 +228,32 @@ class CommentController extends AbstractActionController
 		}
 		$comment->setAuthor($user);	
 	}
+	
+	public function getForm($comment, $entityManager, $action)
+    {
+	
+        $builder = new DoctrineAnnotationBuilder($entityManager);
+        $form = $builder->createForm( $comment );
+
+        //!!!!!! Start !!!!! Added to make the association tables work with select
+        foreach ($form->getElements() as $element){
+            if(method_exists($element, 'getProxy')){                
+                $proxy = $element->getProxy();
+                if(method_exists($proxy, 'setObjectManager')){
+                    $proxy->setObjectManager($entityManager);
+                }
+            }
+        }
+		
+		$form->setHydrator(new DoctrineHydrator($entityManager,'CsnCms\Entity\Comment'));
+        
+        $send = new Element('send');
+        $send->setValue($action); // submit
+        $send->setAttributes(array(
+                'type'  => 'submit'
+        ));
+        $form->add($send);
+
+        return $form;		
+    }
 }
