@@ -25,7 +25,7 @@ class TranslationController extends AbstractActionController
     public function indexAction()
 	{
         $id = (int) $this->params()->fromRoute('id', 0);
-        if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'index', 'action' => 'index'));		
+        if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'article', 'action' => 'index'));		
 		
 		$entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
 		$dql = "SELECT a, u, l, c, h  FROM CsnCms\Entity\Article a LEFT JOIN a.author u LEFT JOIN a.language l LEFT JOIN a.categories c LEFT JOIN a.children h WHERE a.id = ?1";
@@ -41,7 +41,7 @@ class TranslationController extends AbstractActionController
     public function addAction()
 	{
         $id = (int) $this->params()->fromRoute('id', 0);
-        if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'index', 'action' => 'index'));		
+        if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'article', 'action' => 'index'));		
 
 		$entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
 		$article = new Article;
@@ -52,7 +52,7 @@ class TranslationController extends AbstractActionController
 			$article->setParent($parent);
         }
         catch (\Exception $ex) {
-			return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'index', 'action' => 'index'));		
+			return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'article', 'action' => 'index'));		
         }
 		
 		$form = $this->getForm($article, $entityManager, 'Add');
@@ -62,8 +62,6 @@ class TranslationController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
 			$post = $request->getPost();
-			// uncooment and fix if you want to control the date and time
-//			$post->artcCreated = $post->artcCreatedDate . ' ' . $post->artcCreatedTime;
 			$form->setData($post);
 			 if ($form->isValid()) {
 				$this->prepareData($article);
@@ -79,7 +77,7 @@ class TranslationController extends AbstractActionController
     public function editAction()
 	{
 		$id = $this->params()->fromRoute('id');
-		if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'index', 'action' => 'index'));
+		if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'article', 'action' => 'index'));
 
         $id = (int) $this->params()->fromRoute('id2', 0);
         if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'add'), true);
@@ -88,11 +86,11 @@ class TranslationController extends AbstractActionController
 		
         try {
 			$repository = $entityManager->getRepository('CsnCms\Entity\Article');
-			$article = $repository->getArticleForEdit($id);
+			$article = $repository->find($id);
         }
         catch (\Exception $ex) {
 			echo $ex->getMessage(); // this never will be seen fi you don't comment the redirect
-			return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'index', 'action' => 'index'));
+			return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'index'));
         }
 		
 		$form = $this->getForm($article, $entityManager, 'Update');
@@ -102,11 +100,8 @@ class TranslationController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
 			$post = $request->getPost();
-			// uncooment and fix if you want to control the date and time
-//			$post->artcCreated = $post->artcCreatedDate . ' ' . $post->artcCreatedTime;
 			$form->setData($post);
 			 if ($form->isValid()) {
-//				$this->prepareData($article);
 				$entityManager->persist($article);
 				$entityManager->flush();
                 return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'index'), true);				
@@ -119,7 +114,7 @@ class TranslationController extends AbstractActionController
     public function deleteAction()
 	{
 		$id = $this->params()->fromRoute('id');
-		if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'index', 'action' => 'index'));
+		if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'article', 'action' => 'index'));
 
         $id = (int) $this->params()->fromRoute('id2', 0);
         if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'index'), true);		
@@ -134,7 +129,7 @@ class TranslationController extends AbstractActionController
         }
         catch (\Exception $ex) {
 			echo $ex->getMessage(); // this never will be seen fi you don't comment the redirect
-			return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'index', 'action' => 'index'));
+			return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'index'));
         }	
 		return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'index'), true);
 	}	
@@ -142,7 +137,7 @@ class TranslationController extends AbstractActionController
     public function viewAction()
 	{
 		$id = $this->params()->fromRoute('id');
-		if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'index', 'action' => 'index'));
+		if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'index'));
 
         $id = (int) $this->params()->fromRoute('id2', 0);
         if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'index'), true);		
@@ -152,11 +147,11 @@ class TranslationController extends AbstractActionController
         try {
 			$repository = $entityManager->getRepository('CsnCms\Entity\Article');
 			$article = $repository->find($id);
-			if (!is_object($article)) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'index', 'action' => 'index'));
+			if (!is_object($article)) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'index'));
         }
         catch (\Exception $ex) {
 			echo $ex->getMessage(); // this never will be seen fi you don't comment the redirect
-			return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'index', 'action' => 'index'));
+			return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'index'));
         }
 		
 		$sm = $this->getServiceLocator();
