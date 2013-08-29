@@ -15,7 +15,7 @@ Installation
 
 2. Configure referenced modules ([CsnUser](https://github.com/coolcsn/CsnUser) and [CsnAuthorization](https://github.com/coolcsn/CsnAuthorization)) following their instructions.
 
-3. Import the sample SQL schema located in `./vendor/coolcsn/CsnCms/data/csnDatabase.sql`. You can easily do that with *PhpMyAdmin* for instance.
+3. Run `./vendor/bin/doctrine-module orm:schema-tool:update` to update the database schema (**Note:** You may need to force the update by adding ` --force` to the command). Then import the sample data located in `./vendor/coolcsn/CsnCms/data/SampleData.sql`. You can easily do that with *PhpMyAdmin* for instance.
 
 4. Add 'CsnCms' to your application configuration in `config/application.config.php`. An example application configuration could look like the following:
 
