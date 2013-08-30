@@ -30,23 +30,6 @@ Installation
 
 4. Run `./vendor/bin/doctrine-module orm:schema-tool:update` to update the database schema (**Note:** You may need to force the update by adding ` --force` to the command). Then import the sample data located in `./vendor/coolcsn/CsnCms/data/SampleData.sql`. You can easily do that with *PhpMyAdmin* for instance.
 
-- **Important:** CsnCms requires setting a connection for Doctrine (if you haven't done this for some of your other modules). You can paste the following snippet in `config/autoload/doctrine.local.php`, replacing the tokens with your actual connection parameters:
-
-```
-return array(
-  'doctrine' => array(
-    'connection' => array(
-      'orm_default' => array(
-        'driverClass' =>'Doctrine\DBAL\Driver\PDOMySql\Driver',
-        'params' => array(
-          'host'     => 'localhost',
-          'port'     => '3306',
-          'user'     => 'username',
-          'password' => 'password',
-          'dbname'   => 'database',
-)))));
-```
-
 >### We are done, uh? ###
 Navigate to ***[hostname]/csn-cms***. Enjoy :)
 
