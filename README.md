@@ -15,9 +15,7 @@ Installation
 
 2. Configure referenced modules ([CsnUser](https://github.com/coolcsn/CsnUser) and [CsnAuthorization](https://github.com/coolcsn/CsnAuthorization)) following their instructions.
 
-3. Run `./vendor/bin/doctrine-module orm:schema-tool:update` to update the database schema (**Note:** You may need to force the update by adding ` --force` to the command). Then import the sample data located in `./vendor/coolcsn/CsnCms/data/SampleData.sql`. You can easily do that with *PhpMyAdmin* for instance.
-
-4. Add 'CsnCms' to your application configuration in `config/application.config.php`. An example application configuration could look like the following:
+3. Add 'CsnCms' to your application configuration in `config/application.config.php`. An example application configuration could look like the following:
 
 ```
 'modules' => array(
@@ -29,6 +27,8 @@ Installation
     'CsnCms'
 )
 ```
+
+4. Run `./vendor/bin/doctrine-module orm:schema-tool:update` to update the database schema (**Note:** You may need to force the update by adding ` --force` to the command). Then import the sample data located in `./vendor/coolcsn/CsnCms/data/SampleData.sql`. You can easily do that with *PhpMyAdmin* for instance.
 
 - **Important:** CsnCms requires setting a connection for Doctrine (if you haven't done this for some of your other modules). You can paste the following snippet in `config/autoload/doctrine.local.php`, replacing the tokens with your actual connection parameters:
 

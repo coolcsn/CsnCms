@@ -38,8 +38,6 @@ class ArticleController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
                 $post = $request->getPost();
-                //uncooment and fix if you want to control the date and time
-                //$post->artcCreated = $post->artcCreatedDate . ' ' . $post->artcCreatedTime;
                 $form->setData($post);
                 if ($form->isValid()) {
                     $this->prepareData($article);
@@ -182,13 +180,13 @@ class ArticleController extends AbstractActionController
         return $form;		
     }
 	
-    public function prepareData($artcile)
+    public function prepareData($article)
     {
-        $artcile->setCreated(new \DateTime());
+        $article->setCreated(new \DateTime());
         $auth = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
         if ($auth->hasIdentity()) {
             $user = $auth->getIdentity();
         }
-        $artcile->setAuthor($user);
+        $article->setAuthor($user);
     }
 }
