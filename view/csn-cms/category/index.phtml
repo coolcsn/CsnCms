@@ -8,13 +8,20 @@ $this->headTitle($title);
     <a href="<?php echo $this->url('csn-cms/default', array('controller' => 'category', 'action'=>'add'));?>">Add new category </a>
 	
 </p>
-
-<table class="table">
-<tr>
-    <th>Name</th>
-    <th>&nbsp;</th>
-</tr>
 <?php
+if($categories)
+{
+echo '<table class="table">';
+echo '<tr>';
+echo '<th>Name</th>';
+echo '<th>&nbsp;</th>';
+echo '</tr>';
+}
+else
+{
+	echo 'There no categories';
+}
+
 foreach ($categories as $category) { ?>
 <tr>
     <td><?php echo $this->escapeHtml($category->getName());?></td>

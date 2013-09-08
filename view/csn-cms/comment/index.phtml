@@ -20,17 +20,24 @@ $this->headTitle($title);
     <a href="<?php echo $this->url('csn-cms/default', array('controller' => 'article', 'action'=>'index'), false);?>">&lt; Back to the articles | </a>
     <a href="<?php echo $this->url('csn-cms/default', array('controller' => 'comment', 'action'=>'add'), true);?>">Add New Comment</a>
 </p>
-
-<table class="table">
-<tr>
-    <th>Title</th>
-    <th>Text</th>
-    <th>Author</th>
-    <th>Language</th>
-	<th>Created</th>
-    <th>&nbsp;</th>
-</tr>
-
+<?php 
+if($comments)
+{
+echo '<table class="table">';
+echo '<tr>';
+echo '<th>Title</th>';
+echo '    <th>Text</th>';
+echo '    <th>Author</th>';
+echo '    <th>Language</th>';
+echo '	<th>Created</th>';
+echo '    <th>&nbsp;</th>';
+echo '</tr>';
+}
+else
+{
+	echo 'There no comments';
+}
+?>
 <?php foreach ($comments as $comment) : ?>
 <tr>
     <td><?php echo $this->escapeHtml($comment->getTitle());?></td>
