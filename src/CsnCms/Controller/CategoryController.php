@@ -32,7 +32,10 @@ class CategoryController extends AbstractActionController
         $entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
         $category = new Category;
         $form = $this->getForm($category, $entityManager, 'Add');
-
+		
+		//hide the id element(bug in doctrine maybe)
+		$form->get('id')->setAttribute('type','hidden');
+		
         $form->bind($category);
 
         $request = $this->getRequest();
@@ -67,6 +70,10 @@ class CategoryController extends AbstractActionController
         }
 
         $form = $this->getForm($category, $entityManager, 'Update');
+		
+		//hide the id element(bug in doctrine maybe)
+		$form->get('id')->setAttribute('type','hidden');
+
         $form->bind($category);
 
         $request = $this->getRequest();
