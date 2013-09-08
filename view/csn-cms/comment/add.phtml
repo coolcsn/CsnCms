@@ -1,12 +1,20 @@
 <?php
 echo '<h1>I am in add.phtml CsnCms CommentController</h1>';
-$form = $this->form;
-$form->prepare();
-$form->setAttribute('action', $this->url('csn-cms/default', array('controller' => 'comment', 'action' => 'add'),true));
-$form->setAttribute('method', 'post');
+if($isAllowedComments)
+{
+	$form = $this->form;
+	$form->prepare();
+	$form->setAttribute('action', $this->url('csn-cms/default', array('controller' => 'comment', 'action' => 'add'),true));
+	$form->setAttribute('method', 'post');
 
-echo $this->form()->openTag($form);
-echo $this->formCollection($form);
-echo $this->form()->closeTag();
-
+	echo $this->form()->openTag($form);
+	echo $this->formCollection($form);
+	echo $this->form()->closeTag();
+}
+else
+{
+	?>  <a href="<?php echo $this->url('csn-cms/default', array('controller' => 'article', 'action'=>'index'), false);?>">&lt; Back to the articles </a>
+	<?php
+	echo '<p>Comments are disabled for this article</p>';
+}
 ?>

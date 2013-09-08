@@ -161,7 +161,7 @@ class Article
     /**
      * @var boolean
      *
-     * @ORM\Column(name="allow_comments", type="boolean", nullable=false)
+     * @ORM\Column(name="allow_comments", type="boolean", nullable=true)
      * @Annotation\Type("Zend\Form\Element\Checkbox")
      * @Annotation\Options({
      * "label":"Allow comments:"})
