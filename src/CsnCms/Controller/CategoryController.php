@@ -18,7 +18,7 @@ class CategoryController extends AbstractActionController
     public function indexAction()
     {
         $entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
-        $dql = "SELECT c.name FROM CsnCms\Entity\Category c";
+        $dql = "SELECT c FROM CsnCms\Entity\Category c ";
         $query = $entityManager->createQuery($dql);
         $query->setMaxResults(30);
         $categories = $query->getResult();

@@ -4,7 +4,9 @@ $this->headTitle($title);
 ?>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
 <p>
-    <a href="<?php echo $this->url('csn-cms/default', array('controller' => 'category', 'action'=>'add'));?>">Add new category</a>
+<a href="<?php echo $this->url('csn-cms/default', array('controller' => 'article', 'action'=>'index'), false);?>">&lt; Back to the articles | </a>
+    <a href="<?php echo $this->url('csn-cms/default', array('controller' => 'category', 'action'=>'add'));?>">Add new category </a>
+	
 </p>
 
 <table class="table">
@@ -13,11 +15,9 @@ $this->headTitle($title);
     <th>&nbsp;</th>
 </tr>
 <?php
-
 foreach ($categories as $category) { ?>
 <tr>
-    <td><?php
-  // echo $this->escapeHtml($category->name);?></td>
+    <td><?php echo $this->escapeHtml($category->getName());?></td>
     <td>
 		<a href="<?php echo $this->url('csn-cms/default', // SUPER IMPORTANT use csn-cms/<segment> NOT ONLY csn-cms
             array('controller' => 'category', 'action'=>'edit', 'id' => $category->getId()));?>">Edit</a>
