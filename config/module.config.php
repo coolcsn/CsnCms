@@ -8,7 +8,8 @@ return array(
             'CsnCms\Controller\Index' => 'CsnCms\Controller\IndexController',
             'CsnCms\Controller\Article' => 'CsnCms\Controller\ArticleController',
             'CsnCms\Controller\Translation' => 'CsnCms\Controller\TranslationController',
-            'CsnCms\Controller\Comment' => 'CsnCms\Controller\CommentController',			
+            'CsnCms\Controller\Comment' => 'CsnCms\Controller\CommentController',
+			'CsnCms\Controller\Category' => 'CsnCms\Controller\CategoryController'		
         ),
     ),	
     'router' => array(

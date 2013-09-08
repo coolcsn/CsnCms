@@ -64,7 +64,13 @@ class CommentController extends AbstractActionController
 		$form->remove('created');
 		$form->remove('author');
 		$form->remove('article');
-		$form->remove('language');		
+		$form->remove('language');
+                //$idd = $form->setUseHiddenElement('id');
+                
+                echo '<pre>';
+                //var_dump($form);
+                echo '</pre>';
+                
 		
 		$repository = $entityManager->getRepository('CsnUser\Entity\Language');
 		$language = $repository->findOneBy(array('abbreviation' => 'en'));	

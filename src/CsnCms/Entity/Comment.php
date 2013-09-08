@@ -1,11 +1,11 @@
 <?php
 
-namespace CsnCms\Entity; 
+namespace CsnCms\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-use Zend\Form\Annotation; 
+use Zend\Form\Annotation;
 // children - are the transaltions
 // parent - is the original article
 
@@ -18,35 +18,35 @@ use Zend\Form\Annotation;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ClassMethods")
  */
 class Comment
-{	
+{
     /**
      * @var CsnUser\Entity\Language
      *
-	 * @ORM\ManyToOne(targetEntity="CsnUser\Entity\Language")
-	 * @ORM\JoinColumn(name="language_id", referencedColumnName="id")
-	 * @Annotation\Type("DoctrineModule\Form\Element\ObjectSelect")
-	 * @Annotation\Options({
-	 * "label":"Language:",
-	 * "empty_option": "Please, choose your language",
-	 * "target_class":"CsnUser\Entity\Language",
-	 * "property": "name"})
+     * @ORM\ManyToOne(targetEntity="CsnUser\Entity\Language")
+     * @ORM\JoinColumn(name="language_id", referencedColumnName="id")
+     * @Annotation\Type("DoctrineModule\Form\Element\ObjectSelect")
+     * @Annotation\Options({
+     * "label":"Language:",
+     * "empty_option": "Please, choose your language",
+     * "target_class":"CsnUser\Entity\Language",
+     * "property": "name"})
      */
-    private $language;
+    protected $language;
 
     /**
      * @var CsnUser\Entity\User
      *
-	 * @ORM\ManyToOne(targetEntity="CsnUser\Entity\User")
-	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-	 * @Annotation\Type("DoctrineModule\Form\Element\ObjectSelect")
-	 * @Annotation\Options({
-	 * "label":"Author:",
-	 * "empty_option": "Please, choose the Author",
-	 * "target_class":"CsnUser\Entity\User",
-	 * "property": "username"})
+     * @ORM\ManyToOne(targetEntity="CsnUser\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @Annotation\Type("DoctrineModule\Form\Element\ObjectSelect")
+     * @Annotation\Options({
+     * "label":"Author:",
+     * "empty_option": "Please, choose the Author",
+     * "target_class":"CsnUser\Entity\User",
+     * "property": "username"})
      */
-    private $author;
-
+    protected $author;
+	
     /**
      * @var CsnCms\Entity\Article
      *
@@ -61,7 +61,7 @@ class Comment
      */
 	 
     private $article;
-
+	
     /**
      * @var string
      *
@@ -73,8 +73,8 @@ class Comment
      * @Annotation\Options({"label":"Title:"})	 
      */
     private $title;
-
-    /**
+	
+	/**
      * @var string
      *
      * @ORM\Column(name="text", type="text", nullable=true)
@@ -82,15 +82,16 @@ class Comment
      * @Annotation\Options({"label":"Text:"})	 
      */
     private $text;
-
+	
     /**
      * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=true)
-     * @Annotation\Attributes({"type":"Zend\Form\Element\DateTime", "min":"2010-01-01T00:00:00Z", "max":"2020-01-01T00:00:00Z", "step":"1"})
+     * @Annotation\Attributes({"type":"Zend\Form\Element\DateTime", "id": "created", "min":"2010-01-01T00:00:00Z", "max":"2020-01-01T00:00:00Z", "step":"1"})
      * @Annotation\Options({"label":"Date\Time:", "format":"Y-m-d\TH:iP"})	 
-     */
-    private $created;
+     */ 
+	 
+    protected $created;
 
     /**
      * @var integer
@@ -109,7 +110,7 @@ class Comment
 	{
         return $this->author . ' -> '.$this->text ;
     }
-
+	
     /**
      * Set language
      *
@@ -149,14 +150,14 @@ class Comment
     /**
      * Get author
      *
-     * @return CsnUser\Entity\User 
+     * @return ORM\ManyToMany\Entity\User 
      */
     public function getAuthor()
     {
         return $this->author;
     }	
-
-    /**
+	
+	/**
      * Set article
      *
      * @param CsnCms\Entity\Article $article
@@ -177,7 +178,8 @@ class Comment
     public function getArticle()
     {
         return $this->article;
-    }	
+    }
+    	
 
     /**
      * Get title
