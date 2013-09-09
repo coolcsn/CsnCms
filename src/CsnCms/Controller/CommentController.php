@@ -139,8 +139,7 @@ class CommentController extends AbstractActionController
 		{
 			return new ViewModel(array(
 				'isAllowedComments' => $isAllowedComments,
-				'id' => $id,
-				'form' => $form
+				'id' => $id
 			));
 			
 		}
