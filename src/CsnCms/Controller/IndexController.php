@@ -8,6 +8,12 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-        return new ViewModel();
+        $entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+        $dql = "SELECT a FROM CsnCms\Entity\Article a WHERE a.parent IS NULL ORDER BY a.created DESC"; 
+        $query = $entityManager->createQuery($dql);
+        $query->setMaxResults(30);
+        $articles = $query->getResult();
+        
+        return new ViewModel(array('articles' => $articles));
     }
 }

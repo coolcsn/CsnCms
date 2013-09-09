@@ -1,1 +1,31 @@
-<h1>Hello, there! This page does nothing for the moment, but in the near future it will represent a front page for our CMS, containing top articles.</h1>
+<?php
+$title = 'Latest articles';
+$this->headTitle($title);
+?>
+<h2><?php echo $this->escapeHtml($title); ?></h2>
+<?php 
+if(!$articles)
+{
+    echo '<p>There no articles</p>';
+}
+else
+{
+    echo '<ul>';
+    foreach ($articles as $article) :
+?>
+        <hr>
+        <li>
+            <h3>
+                <a href="<?php echo $this->url('csn-cms/default', // SUPER IMPORTANT use csn-cms/<segment> NOT ONLY csn-cms
+                                    array('controller' => 'article', 'action'=>'view', 'id' => $article->getId()));?>">
+                <?php echo $this->escapeHtml($article->getTitle());?>
+                </a>
+            </h3>
+                <span><?php echo $article->getCreated()->format('F j, Y H:i'); if(is_object($article->getAuthor())) echo ' by ' . $this->escapeHtml($article->getAuthor()->getUsername());?></span>
+            <?php echo $article->getIntroText();?>
+        </li>
+<?php
+    endforeach;
+    echo '</ul>';
+}
+?>
