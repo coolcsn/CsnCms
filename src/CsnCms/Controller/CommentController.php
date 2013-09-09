@@ -86,8 +86,14 @@ class CommentController extends AbstractActionController
 			$form->remove('article');
 			
 			//hide the id element(bug in doctrine maybe)
-			$form->get('id')->setAttribute('type','hidden');
+			//otherwise method to hide without bug;
+			try
+			{
+				$form->get('id')->setAttribute('type','hidden');
+			}
+			catch (\Exception $ex) {
 			
+			}
 			//$repository = $entityManager->getRepository('CsnUser\Entity\Language');
 			//$language = $repository->findOneBy(array('abbreviation' => 'en'));	
 			//$comment->setLanguage($language);
@@ -192,7 +198,13 @@ class CommentController extends AbstractActionController
 		$form->remove('article');
 		
 		//hide the id element(bug in doctrine maybe)
-		$form->get('id')->setAttribute('type','hidden');
+		try
+		{
+			$form->get('id')->setAttribute('type','hidden');
+		}
+		catch (\Exception $ex) {
+		
+		}
 
 		foreach ($form->getElements() as $element){
 			if(method_exists($element, 'getProxy')){                

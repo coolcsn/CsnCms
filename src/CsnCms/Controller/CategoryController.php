@@ -34,7 +34,13 @@ class CategoryController extends AbstractActionController
         $form = $this->getForm($category, $entityManager, 'Add');
 		
 		//hide the id element(bug in doctrine maybe)
-		$form->get('id')->setAttribute('type','hidden');
+		try
+		{
+			$form->get('id')->setAttribute('type','hidden');
+		}
+		catch (\Exception $ex) {
+		
+		}
 		
         $form->bind($category);
 
@@ -72,8 +78,15 @@ class CategoryController extends AbstractActionController
         $form = $this->getForm($category, $entityManager, 'Update');
 		
 		//hide the id element(bug in doctrine maybe)
-		$form->get('id')->setAttribute('type','hidden');
-
+		//$form->get('id')->setAttribute('type','hidden');
+		
+		try
+		{
+			$form->get('id')->setAttribute('type','hidden');
+		}
+		catch (\Exception $ex) {
+		
+		}
         $form->bind($category);
 
         $request = $this->getRequest();
