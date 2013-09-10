@@ -14,6 +14,40 @@ class IndexController extends AbstractActionController
         $query->setMaxResults(30);
         $articles = $query->getResult();
         
-        return new ViewModel(array('articles' => $articles));
+		
+		
+		//Top 5 commented articles;
+		
+		//$dql1 = "SELECT a, count(a.id) as total FROM CsnCms\Entity\Article a, CsnCms\Entity\Comment c where a.id = c.article GROUP BY a.id ORDER BY total DESC";
+		//$query1 = $entityManager->createQuery($dql1);
+		//$mostCommentedArticles = $query1->getResult();
+		
+		//second way;
+		//http://stackoverflow.com/questions/11137395/doctrine-2-does-not-recognize-select-on-the-from-clause
+		$qb = $entityManager->createQueryBuilder();
+		$qb->select(array('count(a.id) as total, a.id'))
+		->from('CsnCms\Entity\Article a, CsnCms\Entity\Comment c')
+		->where('a.id = c.article')
+		->groupBy('a.id')
+		->orderBy('total','DESC'); //missing the object.. follow bottom steps;
+
+		$result = $qb->getQuery()->getResult();
+		
+		$dql1 = 'AAA';
+		$mostC = '';
+		foreach($result as $resul)
+		{
+			$dql1 = "SELECT a FROM CsnCms\Entity\Article a where a.id = ". $resul['id'];
+			//echo $dql1;
+			$query = $entityManager->createQuery($dql1);
+			$query->setMaxResults(5);
+			$result1 = $query->getResult();
+			$mostCommentedArticles[] = $result1[0]; //List.Add($result[0]);
+			$countOfComments[] = $resul['total'];
+		}
+		
+        return new ViewModel(array('articles' => $articles, 'mostCommentedArticles' => $mostCommentedArticles, 'countOfComments' => $countOfComments));
     }
+	
+	
 }

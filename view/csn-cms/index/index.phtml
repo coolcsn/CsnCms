@@ -3,7 +3,8 @@ $title = 'Latest articles';
 $this->headTitle($title);
 ?>
 <h2><?php echo $this->escapeHtml($title); ?></h2>
-<?php 
+
+<?php
 if(!$articles)
 {
     echo '<p>There no articles</p>';
@@ -27,5 +28,44 @@ else
 <?php
     endforeach;
     echo '</ul>';
+}?>
+<?php
+$counter = 0;
+if(!$mostCommentedArticles)
+{
+    echo '<p>There no articles</p>';
 }
+else
+{
+	echo '<span>TOP FIVE COMMENTED Articles';
 ?>
+	<table border="1">
+	<th> Title </th>	
+	<th> Intro text </th>
+	<th> Created </th>
+	<th> Author </th>
+	<th> Comments </th>
+	<?php
+    foreach ($mostCommentedArticles as $currentArticle) :
+?>
+<tr>
+        <td>
+                <a href="<?php echo $this->url('csn-cms/default', // SUPER IMPORTANT use csn-cms/<segment> NOT ONLY csn-cms
+                                    array('controller' => 'article', 'action'=>'view', 'id' => $currentArticle->getId()));?>">
+                <?php echo $this->escapeHtml($currentArticle->getTitle());?>
+                </a>
+		</td>
+		<td>
+		<?php echo $currentArticle->getIntroText();?>
+		</td>
+		<td>
+			<?php echo $currentArticle->getCreated()->format('F j, Y H:i'); ?>
+		</td>
+		<td>
+			<?php if(is_object($currentArticle->getAuthor())) echo $this->escapeHtml($currentArticle->getAuthor()->getUsername()); ?>
+		</td>
+		<td>
+			<?php echo $countOfComments[$counter]; $counter++; endforeach; }?>
+		</td>
+</tr>
+</span>
