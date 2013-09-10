@@ -171,6 +171,14 @@ class Article
     /**
      * @var integer
      *
+     * @ORM\Column(name="view_count", type="integer", nullable=false)
+     * @Annotation\Exclude()
+     */
+    protected $viewCount = 0;
+    
+    /**
+     * @var integer
+     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -587,6 +595,28 @@ class Article
     public function setAllowComments($allowComments)
     {
         $this->allowComments = $allowComments;
+        return $this;
+    }	
+    
+    /**
+     * Get viewCount
+     *
+     * @return integer
+     */
+    public function getViewCount()
+    {
+        return $this->viewCount;
+    }
+    
+    /**
+     * Set viewCount
+     *
+     * @param boolean $viewCount
+     * @return Article
+     */
+    public function setViewCount($viewCount)
+    {
+        $this->viewCount = $viewCount;
         return $this;
     }	
     

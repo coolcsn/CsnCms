@@ -68,7 +68,6 @@ class Comment
      * @ORM\Column(name="title", type="string", length=100, nullable=false)
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":100}})
-     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[a-zA-Z][a-zA-Z0-9_-]{0,100}$/"}})
      * @Annotation\Attributes({"type":"text"})
      * @Annotation\Options({"label":"Title:"})	 
      */
