@@ -18,22 +18,23 @@ class IndexController extends AbstractActionController
 		
 		//Top 5 commented articles;
 		
-		//$dql1 = "SELECT a, count(a.id) as total FROM CsnCms\Entity\Article a, CsnCms\Entity\Comment c where a.id = c.article GROUP BY a.id ORDER BY total DESC";
-		//$query1 = $entityManager->createQuery($dql1);
-		//$mostCommentedArticles = $query1->getResult();
+		$dql = "SELECT count(a.id) as total, a.id FROM CsnCms\Entity\Article a, CsnCms\Entity\Comment c where a.id = c.article GROUP BY a.id ORDER BY total DESC";
+		$query = $entityManager->createQuery($dql);
+		$result = $query->getResult();
 		
 		//second way;
 		//http://stackoverflow.com/questions/11137395/doctrine-2-does-not-recognize-select-on-the-from-clause
-		$qb = $entityManager->createQueryBuilder();
-		$qb->select(array('count(a.id) as total, a.id'))
-		->from('CsnCms\Entity\Article a, CsnCms\Entity\Comment c')
-		->where('a.id = c.article')
-		->groupBy('a.id')
-		->orderBy('total','DESC'); //missing the object.. follow bottom steps;
-
-		$result = $qb->getQuery()->getResult();
 		
-		$dql1 = 'AAA';
+		//$qb = $entityManager->createQueryBuilder();
+		//$qb->select(array('count(a.id) as total, a.id'))
+		//->from('CsnCms\Entity\Article a, CsnCms\Entity\Comment c')
+		//->where('a.id = c.article')
+		//->groupBy('a.id')
+		//->orderBy('total','DESC'); //missing the object.. follow bottom steps;
+
+		//$result = $qb->getQuery()->getResult();
+		
+		$dql1 = '';
 		$mostC = '';
 		foreach($result as $resul)
 		{
