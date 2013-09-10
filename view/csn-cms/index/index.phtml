@@ -45,6 +45,7 @@ else
 	<th> Created </th>
 	<th> Author </th>
 	<th> Comments </th>
+	<th> More </th>
 	<?php
     foreach ($mostCommentedArticles as $currentArticle) :
 ?>
@@ -65,7 +66,20 @@ else
 			<?php if(is_object($currentArticle->getAuthor())) echo $this->escapeHtml($currentArticle->getAuthor()->getUsername()); ?>
 		</td>
 		<td>
-			<?php echo $countOfComments[$counter]; $counter++; endforeach; }?>
+			<?php echo $countOfComments[$counter]; ?>
 		</td>
+		<td>
+			<a href="<?php echo $this->url('csn-cms/default', // SUPER IMPORTANT use csn-cms/<segment> NOT ONLY csn-cms
+            array('controller' => 'translation', 'action'=>'index', 'id' => $currentArticle->getId()));?>">Translations</a>
+        <a href="<?php echo $this->url('csn-cms/default', // SUPER IMPORTANT use csn-cms/<segment> NOT ONLY csn-cms
+            array('controller' => 'comment', 'action'=>'index', 'id' => $currentArticle->getId()));?>">Comments</a>
+			<a href="<?php echo $this->url('csn-cms/default', // SUPER IMPORTANT use csn-cms/<segment> NOT ONLY csn-cms
+            array('controller' => 'article', 'action'=>'view', 'id' => $article->getId()));?>">View</a>
+		<a href="<?php echo $this->url('csn-cms/default', // SUPER IMPORTANT use csn-cms/<segment> NOT ONLY csn-cms
+            array('controller' => 'article', 'action'=>'edit', 'id' => $article->getId()));?>">Edit</a>
+        <a href="<?php echo $this->url('csn-cms/default', // SUPER IMPORTANT use csn-cms/<segment>
+            array('controller' => 'article', 'action'=>'delete', 'id' => $article->getId()));?>" onclick="return confirm('Do you really want to delete this record?')">Delete</a>
+		</td>
+		<?php $counter++; endforeach; } ?>
 </tr>
 </span>
