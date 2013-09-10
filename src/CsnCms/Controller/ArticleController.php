@@ -126,7 +126,8 @@ class ArticleController extends AbstractActionController
             echo $ex->getMessage(); // this will never be seen if you don't comment the redirect
             return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'index', 'action' => 'index'));
         }
-
+        
+        //--- Decide whether the user has access to this article ---------------
         $sm = $this->getServiceLocator();
         $auth = $sm->get('Zend\Authentication\AuthenticationService');		
         $config = $sm->get('Config');
@@ -147,8 +148,17 @@ class ArticleController extends AbstractActionController
         if (!$acl->isAllowed($role, $resource, $privilege)) {
                 return $this->redirect()->toRoute('home');	
         }
-
-        return new ViewModel(array('article' => $article));
+        //END --- Decide whether the user has access to this article -----------
+        
+        //--- Get all comments -------------------------------------------------
+        $dql = "SELECT c, a FROM CsnCms\Entity\Comment c LEFT JOIN c.article a WHERE a.id = ?1";
+        $query = $entityManager->createQuery($dql);
+        $query->setMaxResults(30);
+	$query->setParameter(1, $id);
+        $comments = $query->getResult();
+        //END --- Get all comments ---------------------------------------------
+        
+        return new ViewModel(array('article' => $article, 'comments' => $comments));
     }
 	
     public function getForm($article, $entityManager, $action)

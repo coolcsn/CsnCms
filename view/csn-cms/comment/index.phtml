@@ -1,5 +1,4 @@
 <?php
-echo '<h1>I am in index.phtml CsnCms Comment Controller</h1>';
 /*
 foreach($articles AS $article) {
     echo $user->getDescription()." - ".$user->getCreated()->format('d.m.Y')."\n";
@@ -35,7 +34,7 @@ echo '</tr>';
 }
 else
 {
-	echo 'There no comments';
+	echo $this->translate('There are no comments');
 }
 ?>
 <?php foreach ($comments as $comment) : ?>
