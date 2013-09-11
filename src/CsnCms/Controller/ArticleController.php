@@ -126,6 +126,12 @@ class ArticleController extends AbstractActionController
             echo $ex->getMessage(); // this will never be seen if you don't comment the redirect
             return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'index', 'action' => 'index'));
         }
+
+		$counterViews = $article->getViewCount();
+		$counterViews +=1;
+		$article->setViewCount($counterViews);
+		$entityManager->persist($article);
+		$entityManager->flush();
         
         //--- Decide whether the user has access to this article ---------------
         $sm = $this->getServiceLocator();
@@ -154,7 +160,7 @@ class ArticleController extends AbstractActionController
         $dql = "SELECT c, a FROM CsnCms\Entity\Comment c LEFT JOIN c.article a WHERE a.id = ?1";
         $query = $entityManager->createQuery($dql);
         $query->setMaxResults(30);
-	$query->setParameter(1, $id);
+		$query->setParameter(1, $id);
         $comments = $query->getResult();
         //END --- Get all comments ---------------------------------------------
         

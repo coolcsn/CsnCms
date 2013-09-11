@@ -4,7 +4,10 @@
     $this->headTitle($title);
     ?>
     <h2><?php echo $this->escapeHtml($title); ?></h2>
-    <?php echo $article->getFullText();?>
+    <?php $getCount = $article->getViewCount(); echo $getCount.' times previewed this Article.'; 
+	echo '<p>';
+	echo $article->getFullText();
+	echo '</p>';?>
 </article>
     <?php if($article->getAllowComments()){ ?>
         <hr>

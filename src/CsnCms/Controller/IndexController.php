@@ -47,7 +47,13 @@ class IndexController extends AbstractActionController
 			$countOfComments[] = $resul['total'];
 		}
 		
-        return new ViewModel(array('articles' => $articles, 'mostCommentedArticles' => $mostCommentedArticles, 'countOfComments' => $countOfComments));
+		$dql = "SELECT a FROM CsnCms\Entity\Article a WHERE a.parent IS NULL ORDER BY a.viewCount DESC"; 
+        $query = $entityManager->createQuery($dql);
+        $query->setMaxResults(5);
+        $mostPreviewedArticles = $query->getResult();
+		
+        return new ViewModel(array('articles' => $articles, 'mostCommentedArticles' => $mostCommentedArticles, 'countOfComments' => $countOfComments,
+		'mostPreviewedArticles' => $mostPreviewedArticles));
     }
 	
 	
