@@ -5,7 +5,7 @@ use Doctrine\ORM\EntityRepository;
 
 // before called Table now Repository Table Data Gateway
 // In Bug Entity add  @Entity(repositoryClass="BugRepository")
-// To be able to use this query logic through 
+// To be able to use this query logic through
 // $this->getEntityManager()->getRepository('Bug') we have to adjust the metadata slightly.
 // http://stackoverflow.com/questions/10481916/the-method-name-must-start-with-either-findby-or-findoneby-uncaught-exception
 
@@ -19,25 +19,25 @@ class CommentRepository extends EntityRepository
 //        $query = $this->getEntityManager()->createQuery($dql);
 //        $query->setMaxResults($number);
 //        return $query->getArrayResult();
-		return array();
+        return array();
     }
 
     public function getCommentForEdit($artcId)
     {
 //        $dql = "SELECT b, e, r FROM \Application\Entity\Bug b JOIN b.engineer e JOIN b.reporter r ".
 //               "WHERE b.status = 'OPEN' AND e.id = ?1 OR r.id = ?1 ORDER BY b.created DESC";
-		$dql = "SELECT c, u, l, a FROM CsnCms\Entity\Comment c LEFT JOIN c.author u LEFT JOIN c.language l LEFT JOIN c.article a WHERE c.id = ?1"; 
+        $dql = "SELECT c, u, l, a FROM CsnCms\Entity\Comment c LEFT JOIN c.author u LEFT JOIN c.language l LEFT JOIN c.article a WHERE c.id = ?1";
 
         $comments = $this->getEntityManager()->createQuery($dql)
                              ->setParameter(1, $artcId)
 //                             ->setMaxResults($number)
                              ->getResult();
-							 // ->getScalarResult();
-							 // ->getArrayResult();
-		return $comments[0];
+                             // ->getScalarResult();
+                             // ->getArrayResult();
+        return $comments[0];
     }
 
-	//  There are already findBy or findOneBy!
+    //  There are already findBy or findOneBy!
 /*
     public function getRecentBugs($number = 30)
     {
@@ -45,25 +45,28 @@ class CommentRepository extends EntityRepository
 
         $query = $this->getEntityManager()->createQuery($dql);
         $query->setMaxResults($number);
+
         return $query->getResult();
     }
 
-	//  findBy or findOneBy!
+    //  findBy or findOneBy!
     public function findByRecentBugs($number = 30)
     {
         $dql = "SELECT b, e, r FROM \Application\Entity\Bug b JOIN b.engineer e JOIN b.reporter r ORDER BY b.created DESC";
 
         $query = $this->getEntityManager()->createQuery($dql);
         $query->setMaxResults($number);
+
         return $query->getResult();
     }
-	
+
     public function getRecentBugsArray($number = 30)
     {
         $dql = "SELECT b, e, r, p FROM \Application\Entity\Bug b JOIN b.engineer e ".
                "JOIN b.reporter r JOIN b.products p ORDER BY b.created DESC";
         $query = $this->getEntityManager()->createQuery($dql);
         $query->setMaxResults($number);
+
         return $query->getArrayResult();
     }
 
@@ -82,6 +85,7 @@ class CommentRepository extends EntityRepository
     {
         $dql = "SELECT p.id, p.name, count(b.id) AS openBugs FROM \Application\Entity\Bug b ".
                "JOIN b.products p WHERE b.status = 'OPEN' GROUP BY p.id";
+
         return $this->getEntityManager()->createQuery($dql)->getScalarResult();
     }
 */

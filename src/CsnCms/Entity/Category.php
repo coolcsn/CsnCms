@@ -25,7 +25,7 @@ class Category
      * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":30}})
      * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[a-zA-Z][a-zA-Z0-9_-]{0,24}$/"}})
      * @Annotation\Attributes({"type":"text"})
-     * @Annotation\Options({"label":"Category Name:"})	 
+     * @Annotation\Options({"label":"Category Name:"})
      */
     protected $name;
 
@@ -36,38 +36,39 @@ class Category
      * @Annotation\Exclude()
      */
     protected $articles;
-	
+
     /**
      * @var integer
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-	 * @Annotation\Exclude()
+     * @Annotation\Exclude()
      */
     protected $id;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->articles = new ArrayCollection();
     }
-	
+
     /**
      * Set Name
      *
-     * @param string $name
+     * @param  string   $name
      * @return Category
      */
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get Name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -77,8 +78,8 @@ class Category
     /**
      * Get articles
      *
-     * @return array 
-     */	
+     * @return array
+     */
     public function getArticles()
     {
         return $this->articles;
@@ -87,22 +88,22 @@ class Category
     /**
      * Add article
      *
-     * @return Collection 
-     */	
-    public function addArticle(\CsnCms\Entity\Article $article) 
+     * @return Collection
+     */
+    public function addArticle(\CsnCms\Entity\Article $article)
     {
         return $this->articles[] = $article;
     }
 
-    public function removeArticle(\CsnCms\Entity\Article $article) 
+    public function removeArticle(\CsnCms\Entity\Article $article)
     {
         $this->articles->removeElement($article);
     }
-	
+
     /**
      * Get Id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {

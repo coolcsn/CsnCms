@@ -32,16 +32,14 @@ class CategoryController extends AbstractActionController
         $entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
         $category = new Category;
         $form = $this->getForm($category, $entityManager, 'Add');
-		
-		//hide the id element(bug in doctrine maybe)
-		try
-		{
-			$form->get('id')->setAttribute('type','hidden');
-		}
-		catch (\Exception $ex) {
-		
-		}
-		
+
+        //hide the id element(bug in doctrine maybe)
+        try {
+            $form->get('id')->setAttribute('type','hidden');
+        } catch (\Exception $ex) {
+
+        }
+
         $form->bind($category);
 
         $request = $this->getRequest();
@@ -51,9 +49,11 @@ class CategoryController extends AbstractActionController
                 if ($form->isValid()) {
                     $entityManager->persist($category);
                     $entityManager->flush();
-                    return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'category', 'action' => 'index'));				
+
+                    return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'category', 'action' => 'index'));
                 }
         }
+
         return new ViewModel(array('form' => $form));
     }
 
@@ -69,24 +69,22 @@ class CategoryController extends AbstractActionController
 
         try {
             $category = $entityManager->find('CsnCms\Entity\Category', $id);
-        }
-        catch (\Exception $ex) {
+        } catch (\Exception $ex) {
             echo $ex->getMessage(); // this will never be seen if you don't comment the redirect
+
             return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'category', 'action' => 'index'));
         }
 
         $form = $this->getForm($category, $entityManager, 'Update');
-		
-		//hide the id element(bug in doctrine maybe)
-		//$form->get('id')->setAttribute('type','hidden');
-		
-		try
-		{
-			$form->get('id')->setAttribute('type','hidden');
-		}
-		catch (\Exception $ex) {
-		
-		}
+
+        //hide the id element(bug in doctrine maybe)
+        //$form->get('id')->setAttribute('type','hidden');
+
+        try {
+            $form->get('id')->setAttribute('type','hidden');
+        } catch (\Exception $ex) {
+
+        }
         $form->bind($category);
 
         $request = $this->getRequest();
@@ -97,12 +95,14 @@ class CategoryController extends AbstractActionController
                 //$this->prepareData($category);
                 $entityManager->persist($category);
                 $entityManager->flush();
-            return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'category', 'action' => 'index'));				
+
+            return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'category', 'action' => 'index'));
             }
         }
+
         return new ViewModel(array('form' => $form, 'id' => $id));
-    }		
-	
+    }
+
     // D - delete
     public function deleteAction()
     {
@@ -116,29 +116,29 @@ class CategoryController extends AbstractActionController
         try {
             $category = $entityManager->find('CsnCms\Entity\Category', $id);
             $entityManager->remove($category);
-            $entityManager->flush();			
-        }
-        catch (\Exception $ex) {
+            $entityManager->flush();
+        } catch (\Exception $ex) {
             echo $ex->getMessage(); // this will never be seen if you don't comment the redirect
+
             return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'category', 'action' => 'index'));
-        }	
-        
+        }
+
         return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'category', 'action' => 'index'));
     }
-	
+
     public function getForm($category, $entityManager, $action)
     {
         $builder = new DoctrineAnnotationBuilder($entityManager);
         $form = $builder->createForm( $category );
 
         //!!!!!! Start !!!!! Added to make the association tables work with select
-        foreach ($form->getElements() as $element){
-            if(method_exists($element, 'getProxy')){                
+        foreach ($form->getElements() as $element) {
+            if (method_exists($element, 'getProxy')) {
                 $proxy = $element->getProxy();
-                if(method_exists($proxy, 'setObjectManager')){
+                if (method_exists($proxy, 'setObjectManager')) {
                     $proxy->setObjectManager($entityManager);
                 }
-            }           
+            }
         }
 
         $form->remove('created');
@@ -152,6 +152,6 @@ class CategoryController extends AbstractActionController
         ));
         $form->add($send);
 
-        return $form;		
+        return $form;
     }
 }

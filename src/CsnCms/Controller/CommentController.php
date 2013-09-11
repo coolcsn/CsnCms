@@ -14,7 +14,6 @@ use Zend\Stdlib\Hydrator;
 
 // for Doctrine annotation
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
-use DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity;
 use DoctrineORMModule\Form\Annotation\AnnotationBuilder as DoctrineAnnotationBuilder;
 
 //- use Doctrine\Common\Persistence\ObjectManager;
@@ -24,129 +23,122 @@ use CsnCms\Entity\Comment;
 class CommentController extends AbstractActionController
 {
     public function indexAction()
-	{
-		$entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');	
-		$isAllowedComments=true;
-		$id = (int) $this->params()->fromRoute('id', 0);
-		try {
-			$repository = $entityManager->getRepository('CsnCms\Entity\Article');
-			$article = $repository->findOneBy(array('id' => $id));
-			
-        }
-		catch (\Exception $ex) {
+    {
+        $entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+        $isAllowedComments=true;
+        $id = (int) $this->params()->fromRoute('id', 0);
+        try {
+            $repository = $entityManager->getRepository('CsnCms\Entity\Article');
+            $article = $repository->findOneBy(array('id' => $id));
+
+        } catch (\Exception $ex) {
            return $this->redirect()->toRoute('csn-cms/default', array(
                'controller' => 'index',
-				'action' => 'index'
+                'action' => 'index'
             ));
         }
-			if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'index', 'action' => 'index'));
-			
-			$dql = "SELECT c, u, l, a  FROM CsnCms\Entity\Comment c LEFT JOIN c.author u LEFT JOIN c.language l LEFT JOIN c.article a WHERE a.id = ?1";
-			$query = $entityManager->createQuery($dql);
-			$query->setMaxResults(30);
-			$query->setParameter(1, $id);
-			// I will get a collection of Articles
-			$comments = $query->getResult();
-			
-			return new ViewModel(array(
-				'id' => $id,
-				'comments' => $comments
-			));	
-	}
+            if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'index', 'action' => 'index'));
+
+            $dql = "SELECT c, u, l, a  FROM CsnCms\Entity\Comment c LEFT JOIN c.author u LEFT JOIN c.language l LEFT JOIN c.article a WHERE a.id = ?1";
+            $query = $entityManager->createQuery($dql);
+            $query->setMaxResults(30);
+            $query->setParameter(1, $id);
+            // I will get a collection of Articles
+            $comments = $query->getResult();
+
+            return new ViewModel(array(
+                'id' => $id,
+                'comments' => $comments
+            ));
+    }
 
     public function addAction()
     {
-		$id = (int) $this->params()->fromRoute('id', 0);
-		$entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');	
-		$isAllowedComments=true;
+        $id = (int) $this->params()->fromRoute('id', 0);
+        $entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+        $isAllowedComments=true;
         if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'article', 'action' => 'index'));
-	
-		try {
-			$repository = $entityManager->getRepository('CsnCms\Entity\Article');
-			$article = $repository->findOneBy(array('id' => $id));
-			$isAllowedComments = $article->getAllowComments();			
-			
-        }
-		catch (\Exception $ex) {
+
+        try {
+            $repository = $entityManager->getRepository('CsnCms\Entity\Article');
+            $article = $repository->findOneBy(array('id' => $id));
+            $isAllowedComments = $article->getAllowComments();
+
+        } catch (\Exception $ex) {
            return $this->redirect()->toRoute('csn-cms/default', array(
                'controller' => 'index',
-				'action' => 'index'
+                'action' => 'index'
             ));
         }
-		
-		if($isAllowedComments)
-		{
-			$comment = new Comment;
-			$comment->setArticle($article);
-			$builder = new DoctrineAnnotationBuilder($entityManager);
-			$form = $builder->createForm( $comment );
 
-			$form->remove('created');
-			$form->remove('author');
-			$form->remove('article');
-			
-			//hide the id element(bug in doctrine maybe)
-			//otherwise method to hide without bug;
-			try
-			{
-				$form->get('id')->setAttribute('type','hidden');
-			}
-			catch (\Exception $ex) {
-			
-			}
-			//$repository = $entityManager->getRepository('CsnUser\Entity\Language');
-			//$language = $repository->findOneBy(array('abbreviation' => 'en'));	
-			//$comment->setLanguage($language);
-			
-			
-			foreach ($form->getElements() as $element){
-				if(method_exists($element, 'getProxy')){                
-					$proxy = $element->getProxy();
-					if(method_exists($proxy, 'setObjectManager')){  
-						$proxy->setObjectManager($entityManager);
-					}
-				}           
-			}
+        if ($isAllowedComments) {
+            $comment = new Comment;
+            $comment->setArticle($article);
+            $builder = new DoctrineAnnotationBuilder($entityManager);
+            $form = $builder->createForm( $comment );
 
-			$form->setHydrator(new DoctrineHydrator($entityManager,'CsnCms\Entity\Comment'));
+            $form->remove('created');
+            $form->remove('author');
+            $form->remove('article');
 
-			$send = new Element('send');
-			$send->setValue('Add'); // submit
-			$send->setAttributes(array(
-				'type'  => 'submit'
-			));
-			$form->add($send);
-			$form->bind($comment);
+            //hide the id element(bug in doctrine maybe)
+            //otherwise method to hide without bug;
+            try {
+                $form->get('id')->setAttribute('type','hidden');
+            } catch (\Exception $ex) {
 
-			$request = $this->getRequest();
-			if ($request->isPost()) {
-				 $form->setData($request->getPost());
-				  if ($form->isValid()) {
-					$this->prepareData($comment);
-					$entityManager->persist($comment);
-					$entityManager->flush();
-					return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'comment', 'action' => 'index', 'id' => $id), true);	  
-				  }
-			}
-	
-			return new ViewModel(array(
-				'isAllowedComments' => $isAllowedComments,
-				'id' => $id,
-				'form' => $form
-			));
-		}
-		else
-		{
-			return new ViewModel(array(
-				'isAllowedComments' => $isAllowedComments,
-				'id' => $id
-			));
-			
-		}
-		/*
-		
-		$entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
-		$comment = new Comment;
+            }
+            //$repository = $entityManager->getRepository('CsnUser\Entity\Language');
+            //$language = $repository->findOneBy(array('abbreviation' => 'en'));
+            //$comment->setLanguage($language);
+
+            foreach ($form->getElements() as $element) {
+                if (method_exists($element, 'getProxy')) {
+                    $proxy = $element->getProxy();
+                    if (method_exists($proxy, 'setObjectManager')) {
+                        $proxy->setObjectManager($entityManager);
+                    }
+                }
+            }
+
+            $form->setHydrator(new DoctrineHydrator($entityManager,'CsnCms\Entity\Comment'));
+
+            $send = new Element('send');
+            $send->setValue('Add'); // submit
+            $send->setAttributes(array(
+                'type'  => 'submit'
+            ));
+            $form->add($send);
+            $form->bind($comment);
+
+            $request = $this->getRequest();
+            if ($request->isPost()) {
+                 $form->setData($request->getPost());
+                  if ($form->isValid()) {
+                    $this->prepareData($comment);
+                    $entityManager->persist($comment);
+                    $entityManager->flush();
+
+                    return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'comment', 'action' => 'index', 'id' => $id), true);
+                  }
+            }
+
+            return new ViewModel(array(
+                'isAllowedComments' => $isAllowedComments,
+                'id' => $id,
+                'form' => $form
+            ));
+        } else {
+            return new ViewModel(array(
+                'isAllowedComments' => $isAllowedComments,
+                'id' => $id
+            ));
+
+        }
+        /*
+
+        $entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+        $comment = new Comment;
         //$article = new Article;
         $form = $this->getForm($comment, $entityManager, 'Add');
 
@@ -160,140 +152,138 @@ class CommentController extends AbstractActionController
                     $this->prepareData($comment);
                     $entityManager->persist($comment);
                     $entityManager->flush();
-                    return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'comment', 'action' => 'index'));				
+
+                    return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'comment', 'action' => 'index'));
                 }
         }
-		
-		//return new ViewModel(array('form' => $form,'id'=>$id));
-		/*		
-		/*/
-	}
+
+        //return new ViewModel(array('form' => $form,'id'=>$id));
+        /*
+        /*/
+    }
 
     public function editAction()
     {
-        $id = (int) $this->params()->fromRoute('id2', 0);		
+        $id = (int) $this->params()->fromRoute('id2', 0);
         if (!$id) {
             return $this->redirect()->toRoute('csn-cms/default', array(
                 'controller' => 'comment',
-				'action' => 'add'
+                'action' => 'add'
             ), true);
         }
-		$entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+        $entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
         try {
-			$repository = $entityManager->getRepository('CsnCms\Entity\Comment');
-			$comment = $repository->getCommentForEdit($id);
-        }
-        catch (\Exception $ex) {
+            $repository = $entityManager->getRepository('CsnCms\Entity\Comment');
+            $comment = $repository->getCommentForEdit($id);
+        } catch (\Exception $ex) {
             return $this->redirect()->toRoute('csn-cms/default', array(
                 'controller' => 'comment',
-				'action' => 'index'
+                'action' => 'index'
             ), true);
-        }			
+        }
 
-		$builder = new DoctrineAnnotationBuilder($entityManager);
-		$form = $builder->createForm( $comment );
-		$form->remove('created');
-		$form->remove('author');
-		$form->remove('article');
-		
-		//hide the id element(bug in doctrine maybe)
-		try
-		{
-			$form->get('id')->setAttribute('type','hidden');
-		}
-		catch (\Exception $ex) {
-		
-		}
+        $builder = new DoctrineAnnotationBuilder($entityManager);
+        $form = $builder->createForm( $comment );
+        $form->remove('created');
+        $form->remove('author');
+        $form->remove('article');
 
-		foreach ($form->getElements() as $element){
-			if(method_exists($element, 'getProxy')){                
-				$proxy = $element->getProxy();
-				if(method_exists($proxy, 'setObjectManager')){  
-					$proxy->setObjectManager($entityManager);
-				}
-			}           
-		}
+        //hide the id element(bug in doctrine maybe)
+        try {
+            $form->get('id')->setAttribute('type','hidden');
+        } catch (\Exception $ex) {
 
-		$form->setHydrator(new DoctrineHydrator($entityManager,'CsnCms\Entity\Comment'));
-		$send = new Element('send');
-		$send->setValue('Edit');
-		$send->setAttributes(array(
-			'type'  => 'submit'
-		));
-		$form->add($send);
+        }
 
-		$form->bind($comment);
+        foreach ($form->getElements() as $element) {
+            if (method_exists($element, 'getProxy')) {
+                $proxy = $element->getProxy();
+                if (method_exists($proxy, 'setObjectManager')) {
+                    $proxy->setObjectManager($entityManager);
+                }
+            }
+        }
+
+        $form->setHydrator(new DoctrineHydrator($entityManager,'CsnCms\Entity\Comment'));
+        $send = new Element('send');
+        $send->setValue('Edit');
+        $send->setAttributes(array(
+            'type'  => 'submit'
+        ));
+        $form->add($send);
+
+        $form->bind($comment);
         $request = $this->getRequest();
         if ($request->isPost()) {
             $form->setData($request->getPost());
             if ($form->isValid()) {
-				$entityManager->persist($comment);
-				$entityManager->flush();				
+                $entityManager->persist($comment);
+                $entityManager->flush();
 
-                 return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'comment', 'action' => 'index'), true); 
+                 return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'comment', 'action' => 'index'), true);
             }
         }
 
         return array(
             'id' => $id,
             'form' => $form,
-        );		
-	}
+        );
+    }
 
     public function deleteAction()
     {
         $id = (int) $this->params()->fromRoute('id2', 0);
         if (!$id) {
-			return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'comment', 'action' => 'index'), true); 
+            return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'comment', 'action' => 'index'), true);
         }
 
-		$entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+        $entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
         try {
-			$repository = $entityManager->getRepository('CsnCms\Entity\Comment');		
-			$comment = $repository->find($id);
-			$entityManager->remove($comment);
-			$entityManager->flush();
-		}
-        catch (\Exception $ex) {
+            $repository = $entityManager->getRepository('CsnCms\Entity\Comment');
+            $comment = $repository->find($id);
+            $entityManager->remove($comment);
+            $entityManager->flush();
+        } catch (\Exception $ex) {
             return $this->redirect()->toRoute('csn-cms/default', array(
-				'controller' => 'comment',
+                'controller' => 'comment',
                 'action' => 'index'
             ), true);
-        }		
-		return $this->redirect()->toRoute('csn-cms/default', array(
-				'controller' => 'comment',
+        }
+
+        return $this->redirect()->toRoute('csn-cms/default', array(
+                'controller' => 'comment',
                 'action' => 'index'
         ), true);
-	}
+    }
 
-	public function prepareData($comment)
-	{
-		$comment->setCreated(new \DateTime());
-		$auth = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
-		if ($auth->hasIdentity()) {
-			$user = $auth->getIdentity();
-		}
-		$comment->setAuthor($user);	
-	}
-	
-	public function getForm($comment, $entityManager, $action)
+    public function prepareData($comment)
     {
-	
+        $comment->setCreated(new \DateTime());
+        $auth = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
+        if ($auth->hasIdentity()) {
+            $user = $auth->getIdentity();
+        }
+        $comment->setAuthor($user);
+    }
+
+    public function getForm($comment, $entityManager, $action)
+    {
+
         $builder = new DoctrineAnnotationBuilder($entityManager);
         $form = $builder->createForm( $comment );
 
         //!!!!!! Start !!!!! Added to make the association tables work with select
-        foreach ($form->getElements() as $element){
-            if(method_exists($element, 'getProxy')){                
+        foreach ($form->getElements() as $element) {
+            if (method_exists($element, 'getProxy')) {
                 $proxy = $element->getProxy();
-                if(method_exists($proxy, 'setObjectManager')){
+                if (method_exists($proxy, 'setObjectManager')) {
                     $proxy->setObjectManager($entityManager);
                 }
             }
         }
-		
-		$form->setHydrator(new DoctrineHydrator($entityManager,'CsnCms\Entity\Comment'));
-        
+
+        $form->setHydrator(new DoctrineHydrator($entityManager,'CsnCms\Entity\Comment'));
+
         $send = new Element('send');
         $send->setValue($action); // submit
         $send->setAttributes(array(
@@ -301,6 +291,6 @@ class CommentController extends AbstractActionController
         ));
         $form->add($send);
 
-        return $form;		
+        return $form;
     }
 }

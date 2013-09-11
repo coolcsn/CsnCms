@@ -38,7 +38,7 @@ class Article
      * "property": "title"})
      */
     protected $parent = null;
-	
+
     /**
      * @var CsnUser\Entity\Language
      *
@@ -66,7 +66,7 @@ class Article
      * "property": "username"})
      */
     protected $author;
-	
+
     /**
      * @var CsnCms\Entity\Resource
      *
@@ -80,7 +80,7 @@ class Article
      * "property": "name"})
      */
     protected $resource;
-	
+
     /**
      * @var string
      *
@@ -89,7 +89,7 @@ class Article
      * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":100}})
      * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[a-zA-Z][a-zA-Z0-9_ -]{0,100}$/"}})
      * @Annotation\Attributes({"type":"text"})
-     * @Annotation\Options({"label":"Title:"})	 
+     * @Annotation\Options({"label":"Title:"})
      */
     protected $title;
 
@@ -101,10 +101,10 @@ class Article
      * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":100}})
      * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[a-zA-Z][a-zA-Z0-9_-]{0,100}$/"}})
      * @Annotation\Attributes({"type":"text"})
-     * @Annotation\Options({"label":"Slug:"})	 
+     * @Annotation\Options({"label":"Slug:"})
      */
     protected $slug;
-	
+
     /**
      * @var string
      *
@@ -113,23 +113,23 @@ class Article
      * @Annotation\Options({"label":"Intro Text:"})
      */
     protected $introtext;
-	
+
     /**
      * @var string
      *
      * @ORM\Column(name="full_text", type="text", nullable=true)
      * @Annotation\Attributes({"type":"textarea"})
-     * @Annotation\Options({"label":"Full Text:"})	 
+     * @Annotation\Options({"label":"Full Text:"})
      */
     protected $fulltext;
-	
+
     /**
      * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=true)
      * @Annotation\Attributes({"type":"Zend\Form\Element\DateTime", "id": "created", "min":"2010-01-01T00:00:00Z", "max":"2020-01-01T00:00:00Z", "step":"1"})
-     * @Annotation\Options({"label":"Date\Time:", "format":"Y-m-d\TH:iP"})	 
-     */ 
+     * @Annotation\Options({"label":"Date\Time:", "format":"Y-m-d\TH:iP"})
+     */
     protected $created;
 
     /**
@@ -157,7 +157,7 @@ class Article
      * @Annotation\Exclude()
      */
     protected $comments;
-    
+
     /**
      * @var boolean
      *
@@ -167,7 +167,7 @@ class Article
      * "label":"Allow comments:"})
      */
     protected $allowComments = true;
-    
+
     /**
      * @var integer
      *
@@ -175,7 +175,7 @@ class Article
      * @Annotation\Exclude()
      */
     protected $viewCount = 0;
-    
+
     /**
      * @var integer
      *
@@ -186,30 +186,31 @@ class Article
      */
     protected $id;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->children = new ArrayCollection;
         $this->categories = new ArrayCollection;
         $this->comments = new ArrayCollection;
         $this->created = new \DateTime();
     }
-	
+
     /**
      * Set language
      *
-     * @param CsnUser\Entity\Language $language
+     * @param  CsnUser\Entity\Language $language
      * @return Article
      */
     public function setLanguage($language)
     {
         $this->language = $language;
-    
+
         return $this;
     }
 
     /**
      * Get language
      *
-     * @return CsnUser\Entity\Language 
+     * @return CsnUser\Entity\Language
      */
     public function getLanguage()
     {
@@ -219,53 +220,53 @@ class Article
     /**
      * Set author
      *
-     * @param CsnUser\Entity\User $author
+     * @param  CsnUser\Entity\User   $author
      * @return CsnCms\Entity\Article
      */
     public function setAuthor($author)
     {
         $this->author = $author;
-    
+
         return $this;
     }
 
     /**
      * Get author
      *
-     * @return ORM\ManyToMany\Entity\User 
+     * @return ORM\ManyToMany\Entity\User
      */
     public function getAuthor()
     {
         return $this->author;
-    }	
+    }
 
     /**
      * Set resource
      *
-     * @param CsnCms\Entity\Resource $resource
+     * @param  CsnCms\Entity\Resource $resource
      * @return CsnCms\Entity\Article
      */
     public function setResource($resource)
     {
         $this->resource = $resource;
-    
+
         return $this;
     }
 
     /**
      * Get resource
      *
-     * @return CsnCms\Entity\Resource 
+     * @return CsnCms\Entity\Resource
      */
     public function getResource()
     {
         return $this->resource;
     }
-	
+
     /**
      * Get Title
      *
-     * @return string 
+     * @return string
      */
     public function getTitle()
     {
@@ -275,20 +276,20 @@ class Article
     /**
      * Set Title
      *
-     * @param string $title
+     * @param  string  $title
      * @return Article
      */
     public function setTitle($title)
     {
         $this->title = $title;
-    
+
         return $this;
     }
 
     /**
      * Get Slug
      *
-     * @return string 
+     * @return string
      */
     public function getSlug()
     {
@@ -298,20 +299,20 @@ class Article
     /**
      * Set Slug
      *
-     * @param string $slug
+     * @param  string  $slug
      * @return Article
      */
     public function setSlug($slug)
     {
         $this->slug = $slug;
-    
+
         return $this;
     }
 
     /**
      * Get Introtext
      *
-     * @return string 
+     * @return string
      */
     public function getIntrotext()
     {
@@ -321,20 +322,20 @@ class Article
     /**
      * Set Introtext
      *
-     * @param string $introtext
+     * @param  string  $introtext
      * @return Article
      */
     public function setIntrotext($introtext)
     {
         $this->introtext = $introtext;
-    
+
         return $this;
     }
 
     /**
      * Get Fulltext
      *
-     * @return string 
+     * @return string
      */
     public function getFulltext()
     {
@@ -344,20 +345,20 @@ class Article
     /**
      * Set Fulltext
      *
-     * @param string $fulltext
+     * @param  string  $fulltext
      * @return Article
      */
     public function setFulltext($fulltext)
     {
         $this->fulltext = $fulltext;
-    
+
         return $this;
     }
 
     /**
      * Get Created
      *
-     * @return DateTime 
+     * @return DateTime
      */
     public function getCreated()
     {
@@ -367,13 +368,13 @@ class Article
     /**
      * Set Created
      *
-     * @param DateTime $created
+     * @param  DateTime $created
      * @return Article
      */
     public function setCreated($created)
     {
         $this->created = $created;
-    
+
         return $this;
     }
 
@@ -390,19 +391,20 @@ class Article
     /**
      * Set categories
      *
-     * @param array $categories
+     * @param  array   $categories
      * @return Article
      */
     public function setCategories($categories)
     {
         $this->categories = $categories; // NOT neccessary
+
         return $this;
     }
-	
+
     /**
      * Add Catgories
      *
-     * @param Collection $categories
+     * @param  Collection $categories
      * @return Article
      */
     public function addCategories(Collection $categories)
@@ -410,26 +412,28 @@ class Article
         foreach ($categories as $category) {
                 $this->addCategory($category);
         }
+
         return $this;
     }
 
     /**
      * Add Catgory
      *
-     * @param CsnCms\Entity\Category $category
+     * @param  CsnCms\Entity\Category $category
      * @return Article
      */
     public function addCategory(\CsnCms\Entity\Category $category)
     {
         $category->addArticle($this); // synchronously updating inverse side
         $this->categories[] = $category;
+
         return $this;
     }
-	
+
     /**
      * Remove Categories
      *
-     * @param Collection $categories
+     * @param  Collection $categories
      * @return Article
      */
     public function removeCategories(Collection $categories)
@@ -437,19 +441,21 @@ class Article
         foreach ($categories as $category) {
                 $this->removeCategory($category);
         }
+
         return $this;
     }
-	
+
     /**
      * Remove Category
      *
-     * @param CsnCms\Entity\Category $category
+     * @param  CsnCms\Entity\Category $category
      * @return Article
      */
     public function removeCategory(\CsnCms\Entity\Category $category)
     {
         $this->categories->removeElement($category);
         $category->removeArticle($this); // update the other site
+
         return $this;
     }
 
@@ -466,19 +472,20 @@ class Article
     /**
      * Set children
      *
-     * @param array $children
+     * @param  array   $children
      * @return Article
      */
     public function setChildren($children)
     {
         $this->children = $children; // NOT neccessary
+
         return $this;
     }
 
     /**
      * Add Child - translation
      *
-     * @param Collection $children
+     * @param  Collection $children
      * @return Article
      */
     public function addChildren(Collection $children)
@@ -486,26 +493,28 @@ class Article
         foreach ($children as $child) {
                 $this->addChild($child);
         }
+
         return $this;
     }
 
     /**
      * Add Child
      *
-     * @param CsnCms\Entity\Article $child
+     * @param  CsnCms\Entity\Article $child
      * @return Article
      */
     public function addChild(\CsnCms\Entity\Article $child)
     {
         $child->setParent($this); // synchronously updating inverse side
         $this->children[] = $child;
+
         return $this;
     }
-	
+
     /**
      * Remove Children
      *
-     * @param Collection $children
+     * @param  Collection $children
      * @return Article
      */
     public function removeChildren(Collection $children)
@@ -513,19 +522,21 @@ class Article
         foreach ($children as $child) {
                 $this->removeChild($child);
         }
+
         return $this;
     }
-	
+
     /**
      * Remove Child
      *
-     * @param \CsnCms\Entity\Article $child
+     * @param  \CsnCms\Entity\Article $child
      * @return Article
      */
     public function removeChild(\CsnCms\Entity\Article $child)
     {
         $this->children->removeElement($child);
         $child->removeParent($this); // update the other site
+
         return $this;
     }
 
@@ -542,7 +553,7 @@ class Article
     /**
      * Set parent
      *
-     * @param \CsnCms\Entity\Article $parent
+     * @param  \CsnCms\Entity\Article $parent
      * @return Article
      */
     public function setParent($parent) //can be null in this case
@@ -551,7 +562,7 @@ class Article
         $this->parent = $parent;
         //if ($parent) $parent->addChild($this); // Max nested functions update the inverse site
         return $this;
-    }	
+    }
 
     /**
      * Remove parent
@@ -560,11 +571,11 @@ class Article
      */
     public function removeParent(\CsnCms\Entity\Article $parent)
     {
-        $this->parent = null; 
+        $this->parent = null;
         // $this->parent->removeElement($parent);
         // $parent->removeChild($this); // update othe site
         return $this;
-    }	
+    }
 
     /**
      * Get comments
@@ -575,7 +586,7 @@ class Article
     {
         return $this->comments;
     }
-    
+
     /**
      * Get allowComments
      *
@@ -585,19 +596,20 @@ class Article
     {
         return $this->allowComments;
     }
-    
+
     /**
      * Set allowComments
      *
-     * @param boolean $allowComments
+     * @param  boolean $allowComments
      * @return Article
      */
     public function setAllowComments($allowComments)
     {
         $this->allowComments = $allowComments;
+
         return $this;
-    }	
-    
+    }
+
     /**
      * Get viewCount
      *
@@ -607,23 +619,24 @@ class Article
     {
         return $this->viewCount;
     }
-    
+
     /**
      * Set viewCount
      *
-     * @param boolean $viewCount
+     * @param  boolean $viewCount
      * @return Article
      */
     public function setViewCount($viewCount)
     {
         $this->viewCount = $viewCount;
+
         return $this;
-    }	
-    
+    }
+
     /**
      * Get Id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
