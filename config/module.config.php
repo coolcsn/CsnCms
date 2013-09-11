@@ -39,6 +39,21 @@ return array(
                             ),
                         ),
                     ),
+					'paginator-doctrine' => array(
+						'type'    => 'Segment',
+						'options' => array(
+		//					'route'    => '/[:controller[/:action[/:id[/:id2[/:page]]]]]',
+							'route'    => '/list/[:controller[/page:page]]',
+							'constraints' => array(
+								'page' => '[0-9]*',
+							),
+							'defaults' => array(
+								'__NAMESPACE__' => 'CsnCms\Controller',
+								'controller'    => 'article',
+								'action'        => 'index',
+							),
+						),
+					),
                 ),
             ),
         ),

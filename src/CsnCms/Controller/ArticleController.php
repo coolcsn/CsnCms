@@ -12,18 +12,41 @@ use DoctrineORMModule\Form\Annotation\AnnotationBuilder as DoctrineAnnotationBui
 
 use CsnCms\Entity\Article;
 
+// Pagination
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
+ use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
+ use Zend\Paginator\Paginator;
+
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
+
 class ArticleController extends AbstractActionController
 {
+	public function __construct()
+	{
+		//new Paginator();
+	}
     // R - retrieve
     public function indexAction()
     {
         $entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+		
         $dql = "SELECT a, u, l, c FROM CsnCms\Entity\Article a LEFT JOIN a.author u LEFT JOIN a.language l LEFT JOIN a.categories c WHERE a.parent IS NULL";
         $query = $entityManager->createQuery($dql);
-        $query->setMaxResults(30);
+		$query->setMaxResults(30);
         $articles = $query->getResult();
-
-        return new ViewModel(array('articles' => $articles));
+		
+		$repository = $entityManager->getRepository('CsnCms\Entity\Article');
+		$adapter = new DoctrineAdapter(new ORMPaginator($repository->createQueryBuilder('article')));
+		
+		// Create the paginator itself
+		$paginator = new Paginator($adapter);
+		$page = 1;
+		if ($this->params()->fromRoute('page')) $page = $this->params()->fromRoute('page');
+		$paginator->setCurrentPageNumber((int)$page)
+				  ->setItemCountPerPage(5);
+		
+		
+        return new ViewModel(array('articles' => $articles, 'paginator' => $paginator));
     }
 
     // C - create

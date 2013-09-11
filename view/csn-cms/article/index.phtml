@@ -8,7 +8,8 @@ $this->headTitle($title);
     <a href="<?php echo $this->url('csn-cms/default', array('controller' => 'category', 'action'=>'index'));?>">Article Categories</a>
 </p>
 <?php 
-if($articles)
+
+if($paginator)
 {
 echo '<table class="table">';
 echo '<tr>';
@@ -27,7 +28,7 @@ else
 }
 ?>
 
-<?php foreach ($articles as $article) : ?>
+<?php foreach ($paginator as $article) : ?>
 <tr>
     <td><?php echo $this->escapeHtml($article->getTitle());?></td>
     <td><?php echo $article->getIntrotext();?></td>
@@ -51,3 +52,6 @@ else
 </tr>
 <?php endforeach; ?>
 </table>
+<?php echo $this->paginationControl($this->paginator,
+                                    'Sliding', // All, Elastic, Jumping, Sliding
+                                    'csn-cms/search_pagination.phtml', array('route' => 'csn-cms/paginator-doctrine')); ?>
