@@ -14,6 +14,7 @@ if($categories)
 echo '<table class="table">';
 echo '<tr>';
 echo '<th>Name</th>';
+echo '<th>Count of articles </th>';
 echo '<th>&nbsp;</th>';
 echo '</tr>';
 }
@@ -25,6 +26,7 @@ else
 foreach ($categories as $category) { ?>
 <tr>
     <td><?php echo $this->escapeHtml($category->getName());?></td>
+	<td><?php echo $this->escapeHtml(count($category->getArticles()));?></td>
     <td>
 		<a href="<?php echo $this->url('csn-cms/default',
             array('controller' => 'category', 'action'=>'view', 'id' => $category->getId()));?>">View articles</a>
