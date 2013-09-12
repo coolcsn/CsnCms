@@ -26,9 +26,11 @@ foreach ($categories as $category) { ?>
 <tr>
     <td><?php echo $this->escapeHtml($category->getName());?></td>
     <td>
-		<a href="<?php echo $this->url('csn-cms/default', // SUPER IMPORTANT use csn-cms/<segment> NOT ONLY csn-cms
+		<a href="<?php echo $this->url('csn-cms/default',
+            array('controller' => 'category', 'action'=>'view', 'id' => $category->getId()));?>">View articles</a>
+		<a href="<?php echo $this->url('csn-cms/default', 
             array('controller' => 'category', 'action'=>'edit', 'id' => $category->getId()));?>">Edit</a>
-        <a href="<?php echo $this->url('csn-cms/default', // SUPER IMPORTANT use csn-cms/<segment>
+        <a href="<?php echo $this->url('csn-cms/default', 
             array('controller' => 'category', 'action'=>'delete', 'id' => $category->getId()));?>" onclick="return confirm('Do you really want to delete this record?')">Delete</a>
     </td>
 </tr>

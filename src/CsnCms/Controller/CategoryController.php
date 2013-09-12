@@ -125,6 +125,21 @@ class CategoryController extends AbstractActionController
 
         return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'category', 'action' => 'index'));
     }
+	
+	public function viewAction()
+    {
+		$id = $this->params()->fromRoute('id');
+        if (!$id) {
+            return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'category', 'action' => 'index'));
+        }
+		
+		$entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+
+		$category = $entityManager->find('CsnCms\Entity\Category', $id);
+
+        return new ViewModel(array('category' => $category));
+		
+	}
 
     public function getForm($category, $entityManager, $action)
     {
