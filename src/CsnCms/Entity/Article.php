@@ -175,6 +175,14 @@ class Article
      * @Annotation\Exclude()
      */
     protected $viewCount = 0;
+	
+	/**
+     * @var integer
+     *
+     * @ORM\Column(name="vote_count", type="integer", nullable=false)
+     * @Annotation\Exclude()
+     */
+    protected $voteCount = 0;
 
     /**
      * @var integer
@@ -632,7 +640,30 @@ class Article
 
         return $this;
     }
+	
+	/**
+     * Get voteCount
+     *
+     * @return integer
+     */
+    public function getVoteCount()
+    {
+        return $this->voteCount;
+    }
 
+    /**
+     * Set voteCount
+     *
+     * @param  boolean $voteCount
+     * @return Article
+     */
+    public function setVoteCount($voteCount)
+    {
+        $this->voteCount = $voteCount;
+
+        return $this;
+    }
+	
     /**
      * Get Id
      *

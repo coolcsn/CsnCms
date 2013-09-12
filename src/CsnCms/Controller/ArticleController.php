@@ -192,6 +192,34 @@ class ArticleController extends AbstractActionController
         //END --- Get all comments ---------------------------------------------
         return new ViewModel(array('article' => $article, 'comments' => $comments));
     }
+	
+	public function voteAction()
+	{
+		$id2 = $this->params()->fromRoute('id2');
+		$id = $this->params()->fromRoute('id');
+        if (!$id) {
+            return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'index', 'action' => 'index'));
+        }
+		$entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+		
+		$article = $entityManager->find('CsnCms\Entity\Article', $id);
+		$currentVoteCount = $article->getVoteCount();
+		
+		if($id2>0)
+		{
+			$currentVoteCount++;
+            
+		}
+		else
+		{
+			$currentVoteCount--;
+		}
+		
+		$article->setVoteCount($currentVoteCount);
+        $entityManager->flush();
+		
+		return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'article', 'action' => 'view', 'id' => $id));
+	}
 
     public function getForm($article, $entityManager, $action)
     {

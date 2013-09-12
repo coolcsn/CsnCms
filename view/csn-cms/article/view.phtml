@@ -4,8 +4,26 @@
     $this->headTitle($title);
     ?>
     <h2><?php echo $this->escapeHtml($title); ?></h2>
-    <?php $getCount = $article->getViewCount(); echo $getCount.' times previewed this Article.'; 
-	echo '<p>';
+	<p><?php $getVotes = $article->getVoteCount();
+	if($getVotes)
+	{
+		echo '+'.$getVotes;
+	}
+	else
+	{
+		echo $getVotes;
+	}
+	echo ' average vote.'; ?></p>
+	<a href="<?php echo $this->url('csn-cms/default',
+                            array('controller' => 'article', 'action'=>'vote', 'id' => $article->getId(), 'id2' => 1), true);?>">
+                    <?php echo $this->translate('Vote PLUS');  ?>
+                </a>
+	<a href="<?php echo $this->url('csn-cms/default',
+                            array('controller' => 'article', 'action'=>'vote', 'id' => $article->getId(), 'id2' => 0), true);?>">
+                    <?php echo $this->translate('Vote Minus');  ?>
+                </a>
+    <p><?php $getCount = $article->getViewCount(); echo $getCount.' times previewed this Article.';
+	echo '</p><p>';
 	echo $article->getFullText();
 	echo '</p>';?>
 </article>
