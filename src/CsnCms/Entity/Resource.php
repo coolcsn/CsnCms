@@ -1,4 +1,14 @@
 <?php
+/**
+ * Coolcsn Zend Framework 2 CMS Module
+ * 
+ * @link https://github.com/coolcsn/CsnCms for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 LightSoft 2005 Ltd. Bulgaria
+ * @license https://github.com/coolcsn/CsnCms/blob/master/LICENSE BSDLicense
+ * @author Stoyan Cheresharov <stoyan@coolcsn.com>
+ * @author Stoyan Revov <st.revov@gmail.com>
+*/
+
 namespace CsnCms\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

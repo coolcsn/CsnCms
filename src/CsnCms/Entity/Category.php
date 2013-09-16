@@ -1,4 +1,15 @@
 <?php
+/**
+ * Coolcsn Zend Framework 2 CMS Module
+ * 
+ * @link https://github.com/coolcsn/CsnCms for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 LightSoft 2005 Ltd. Bulgaria
+ * @license https://github.com/coolcsn/CsnCms/blob/master/LICENSE BSDLicense
+ * @author Stoyan Cheresharov <stoyan@coolcsn.com>
+ * @author Svetoslav Chonkov <svetoslav.chonkov@gmail.com>
+ * @author Stoyan Revov <st.revov@gmail.com>
+*/
+
 namespace CsnCms\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -36,7 +47,16 @@ class Category
      * @Annotation\Exclude()
      */
     protected $articles;
-
+    
+    /**
+     * Represents an User, who owns this category. Null if general category.
+     *
+     * @ORM\ManyToOne(targetEntity="CsnUser\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
+     * @Annotation\Exclude()
+     */
+    protected $user;
+    
     /**
      * @var integer
      *
@@ -99,7 +119,30 @@ class Category
     {
         $this->articles->removeElement($article);
     }
+    
+    /**
+     * Set user
+     *
+     * @param  CsnUser\Entity\User $user
+     * @return Category
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
 
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return CsnUser\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+    
     /**
      * Get Id
      *

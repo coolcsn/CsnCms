@@ -1,4 +1,14 @@
 <?php
+/**
+ * Coolcsn Zend Framework 2 CMS Module
+ * 
+ * @link https://github.com/coolcsn/CsnCms for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 LightSoft 2005 Ltd. Bulgaria
+ * @license https://github.com/coolcsn/CsnCms/blob/master/LICENSE BSDLicense
+ * @author Stoyan Cheresharov <stoyan@coolcsn.com>
+ * @author Stoyan Revov <st.revov@gmail.com>
+ * @author Svetoslav Chonkov <svetoslav.chonkov@gmail.com>
+*/
 
 namespace CsnCms\Entity;
 use Doctrine\ORM\Mapping as ORM;
@@ -176,13 +186,14 @@ class Article
      */
     protected $viewCount = 0;
 	
-	/**
-     * @var integer
+    /**
+     * @var Vote
      *
-     * @ORM\Column(name="vote_count", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Vote")
+     * @ORM\JoinColumn(name="vote_id", referencedColumnName="id")
      * @Annotation\Exclude()
      */
-    protected $voteCount = 0;
+    protected $vote = 0;
 
     /**
      * @var integer
@@ -641,25 +652,25 @@ class Article
         return $this;
     }
 	
-	/**
-     * Get voteCount
+    /**
+     * Get vote
      *
-     * @return integer
+     * @return Vote
      */
-    public function getVoteCount()
+    public function getVote()
     {
-        return $this->voteCount;
+        return $this->vote;
     }
 
     /**
-     * Set voteCount
+     * Set vote
      *
-     * @param  boolean $voteCount
+     * @param  Vote $vote
      * @return Article
      */
-    public function setVoteCount($voteCount)
+    public function setVote($vote)
     {
-        $this->voteCount = $voteCount;
+        $this->vote = $vote;
 
         return $this;
     }
