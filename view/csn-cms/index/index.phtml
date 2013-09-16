@@ -7,7 +7,7 @@ $this->headTitle($title);
 <?php
 if(!$articles)
 {
-    echo '<p>There no articles</p>';
+    echo '<p>There no articles to show "Latest Articles".</p>';
 }
 else
 {
@@ -46,11 +46,12 @@ echo '</tr>';
 }
 else
 {
-	echo 'There no articles';
+	echo '<p>There no articles to show "Most Commented Articles".</p>';
 }
 ?>
 
 <?php $counter = 0;
+if($mostCommentedArticles){
 foreach ($mostCommentedArticles as $article) : ?>
 <tr>
     <td><a href="<?php 
@@ -75,7 +76,7 @@ foreach ($mostCommentedArticles as $article) : ?>
             array('controller' => 'article', 'action'=>'delete', 'id' => $article->getId()));?>" onclick="return confirm('Do you really want to delete this record?')">Delete</a>
     </td>
 </tr>
-<?php $counter++; endforeach; ?>
+<?php $counter++; endforeach; }?>
 </table>
 
 <?php 
@@ -95,11 +96,13 @@ echo '</tr>';
 }
 else
 {
-	echo 'There no articles';
+	echo '<p>There no articles to show "Most Previewed Articles".</p>';
 }
 ?>
 
 <?php
+if($mostPreviewedArticles)
+{
 foreach ($mostPreviewedArticles as $article) : ?>
 <tr>
     <td><a href="<?php 
@@ -124,5 +127,5 @@ foreach ($mostPreviewedArticles as $article) : ?>
             array('controller' => 'article', 'action'=>'delete', 'id' => $article->getId()));?>" onclick="return confirm('Do you really want to delete this record?')">Delete</a>
     </td>
 </tr>
-<?php endforeach; ?>
+<?php endforeach; } ?>
 </table>
