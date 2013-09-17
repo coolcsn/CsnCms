@@ -4,25 +4,32 @@
     $this->headTitle($title);
     ?>
     <h2><?php echo $this->escapeHtml($title); ?></h2>
-	<p><?php $getVotes = $article->getVoteCount();
-	if($getVotes)
-	{
-		echo '+'.$getVotes;
-	}
-	else
-	{
-		echo $getVotes;
-	}
-	echo ' average vote.'; ?></p>
+	<p><?php
+		if(!$hasUserVoted)
+		{
+			 ?></p>
+	
 	<a href="<?php echo $this->url('csn-cms/default',
                             array('controller' => 'article', 'action'=>'vote', 'id' => $article->getId(), 'id2' => 1), true);?>">
-                    <?php echo $this->translate('Vote PLUS');  ?>
+                    <?php echo $this->translate('Like');  ?>
                 </a>
 	<a href="<?php echo $this->url('csn-cms/default',
                             array('controller' => 'article', 'action'=>'vote', 'id' => $article->getId(), 'id2' => 0), true);?>">
-                    <?php echo $this->translate('Vote Minus');  ?>
+                    <?php echo $this->translate('Dislike');  ?>
                 </a>
-    <p><?php $getCount = $article->getViewCount(); echo $getCount.' times previewed this Article.';
+    <p><?php } 
+	else
+	{
+		echo $this->translate('You have already voted!');
+	}
+	?>
+	<p>
+	<?php $getLikeVotes = $article->getVote()->getLikesCount(); echo 'Likes: '. $getLikeVotes ;
+	 $getDislikeVotes = $article->getVote()->getDislikesCount(); echo 'Dislikes: '. $getDislikeVotes;
+	?>
+	</p>
+	<?php
+	$getCount = $article->getViewCount(); echo $getCount.' times previewed this Article.';
 	echo '</p><p>';
 	echo $article->getFullText();
 	echo '</p>';?>

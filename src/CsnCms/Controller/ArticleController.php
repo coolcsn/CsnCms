@@ -190,7 +190,10 @@ class ArticleController extends AbstractActionController
         $query->setParameter(1, $id);
         $comments = $query->getResult();
         //END --- Get all comments ---------------------------------------------
-        return new ViewModel(array('article' => $article, 'comments' => $comments));
+		
+		$hasUserVoted = $this->hasUserVoted($article);
+		
+        return new ViewModel(array('article' => $article, 'comments' => $comments, 'hasUserVoted' => $hasUserVoted));
     }
 	
 	public function voteAction()
@@ -203,20 +206,36 @@ class ArticleController extends AbstractActionController
 		$entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
 		
 		$article = $entityManager->find('CsnCms\Entity\Article', $id);
-		$currentVoteCount = $article->getVoteCount();
+		
+		$currentVoteCount = 0;
 		
 		if($id2>0)
 		{
+			$currentVoteCount = $article->getVote()->getLikesCount();
 			$currentVoteCount++;
-            
+            $article->getVote()->setLikesCount($currentVoteCount);
 		}
 		else
 		{
-			$currentVoteCount--;
+			$currentVoteCount = $article->getVote()->getDislikesCount();
+			$currentVoteCount++;
+			$article->getVote()->setDislikesCount($currentVoteCount);
 		}
 		
-		$article->setVoteCount($currentVoteCount);
-        $entityManager->flush();
+		$usersVoted = $article->getVote()->getUsersVoted();
+		$usersVoted[] = $this->identity();
+		
+		try
+		{
+			
+			$entityManager->persist($article);
+			$entityManager->flush();
+		}
+		catch (\Exception $ex)
+		{
+		}
+		
+		
 		
 		return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'article', 'action' => 'view', 'id' => $id));
 	}
@@ -258,5 +277,23 @@ class ArticleController extends AbstractActionController
             $user = $auth->getIdentity();
         }
         $article->setAuthor($user);
+		
+		$vote = new \CsnCms\Entity\Vote();
+		$article->setVote($vote);
     }
+	
+	public function hasUserVoted($article)
+	{
+		$entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+		
+		$dql = "SELECT count(v.id) FROM CsnCms\Entity\Vote v LEFT JOIN v.usersVoted u WHERE v.id = ?0 AND u.id =?1";
+        $query = $entityManager->createQuery($dql);
+		
+		
+		$query->setParameter(0, $article->getVote()->getId());
+		$query->setParameter(1, $this->identity()->getId());
+        $hasUserVoted = $query->getSingleScalarResult();
+		
+		return $hasUserVoted;
+	}
 }

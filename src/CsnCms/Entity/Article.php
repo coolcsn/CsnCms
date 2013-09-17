@@ -189,7 +189,7 @@ class Article
     /**
      * @var Vote
      *
-     * @ORM\OneToOne(targetEntity="Vote")
+     * @ORM\OneToOne(targetEntity="CsnCms\Entity\Vote", cascade={"persist"})
      * @ORM\JoinColumn(name="vote_id", referencedColumnName="id")
      * @Annotation\Exclude()
      */
