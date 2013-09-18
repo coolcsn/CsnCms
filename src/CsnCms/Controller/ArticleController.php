@@ -289,10 +289,18 @@ class ArticleController extends AbstractActionController
 		$dql = "SELECT count(v.id) FROM CsnCms\Entity\Vote v LEFT JOIN v.usersVoted u WHERE v.id = ?0 AND u.id =?1";
         $query = $entityManager->createQuery($dql);
 		
+		$articleId = $article->getVote()->getId();
+
+		$userId = $this->identity();
+		$hasUserVoted = 'no';
 		
-		$query->setParameter(0, $article->getVote()->getId());
-		$query->setParameter(1, $this->identity()->getId());
-        $hasUserVoted = $query->getSingleScalarResult();
+		if($articleId != null && $userId != null)
+		{
+			$userId = $this->identity()->getId();
+			$query->setParameter(0, $articleId);
+			$query->setParameter(1, $userId);
+			$hasUserVoted = $query->getSingleScalarResult();
+		}
 		
 		return $hasUserVoted;
 	}

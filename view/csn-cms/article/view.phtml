@@ -18,6 +18,10 @@
                     <?php echo $this->translate('Dislike');  ?>
                 </a>
     <p><?php } 
+	else if($hasUserVoted == 'no')
+	{
+		echo $this->translate('You have no permission for voting!');
+	}
 	else
 	{
 		echo $this->translate('You have already voted!');
