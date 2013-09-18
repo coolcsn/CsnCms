@@ -22,9 +22,19 @@
             "email":     "st.revov@gmail.com",
             "role":      "Developer"
         },
-	{
+		{
             "name":      "Stoyan Petkov",
             "email":     "spalienkata21@gmail.com",
+            "role":      "Developer"
+        },
+		{
+            "name":      "Svetoslav Chonkov",
+            "email":     "svetoslav.chonkov@gmail.com",
+            "role":      "Developer"
+        },
+		{
+            "name":      "Nikola Vasilev",
+            "email":     "niko7vasilev@gmail.com",
             "role":      "Developer"
         }
     ],
