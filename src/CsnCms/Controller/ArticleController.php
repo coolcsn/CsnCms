@@ -122,9 +122,10 @@ class ArticleController extends AbstractActionController
         $entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
 
         try {
-            $article = $entityManager->find('CsnCms\Entity\Article', $id);
+            $repository = $entityManager->getRepository('CsnCms\Entity\Article');
+            $article = $repository->find($id);
             $entityManager->remove($article);
-			$entityManager->flush();
+            $entityManager->flush();
         } catch (\Exception $ex) {
             echo $ex->getMessage(); // this will never be seen if you don't comment the redirect
 
