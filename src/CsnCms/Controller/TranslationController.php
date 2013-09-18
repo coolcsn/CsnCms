@@ -37,37 +37,37 @@ class TranslationController extends AbstractActionController
     }
 
     // C - create
-    public function addAction()
+	public function addAction()
     {
-        $id = (int) $this->params()->fromRoute('id', 0);
+		$id = (int) $this->params()->fromRoute('id', 0);
         if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'article', 'action' => 'index'));
-
+		
         $entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
         $article = new Article;
-
-        try {
+		
+		try {
             $repository = $entityManager->getRepository('CsnCms\Entity\Article');
             $parent = $repository->findOneBy(array('id' => $id));
             $article->setParent($parent);
         } catch (\Exception $ex) {
             return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'article', 'action' => 'index'));
         }
-
+		
         $form = $this->getForm($article, $entityManager, 'Add');
 
         $form->bind($article);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $post = $request->getPost();
-            $form->setData($post);
-             if ($form->isValid()) {
-                $this->prepareData($article);
-                $entityManager->persist($article);
-                $entityManager->flush();
+                $post = $request->getPost();
+                $form->setData($post);
+                if ($form->isValid()) {
+                    $this->prepareData($article);
+                    $entityManager->persist($article);
+                    $entityManager->flush();
 
-                return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'index', 'id' => $id), true);
-             }
+					return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'index', 'id' => $id), true);
+                }
         }
 
         return new ViewModel(array('form' => $form));
@@ -209,14 +209,20 @@ class TranslationController extends AbstractActionController
 
         return $form;
     }
-
-    public function prepareData($artcile)
+	
+	public function prepareData($article)
     {
-        $artcile->setCreated(new \DateTime());
+        $article->setCreated(new \DateTime());
         $auth = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
         if ($auth->hasIdentity()) {
             $user = $auth->getIdentity();
         }
-        $artcile->setAuthor($user);
+        $article->setAuthor($user);
+		
+		$vote = new \CsnCms\Entity\Vote();
+		echo '<pre>';
+		print_r($vote);
+		echo '</pre>';
+		$article->setVote($vote);
     }
 }

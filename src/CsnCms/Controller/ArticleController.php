@@ -124,7 +124,7 @@ class ArticleController extends AbstractActionController
         try {
             $article = $entityManager->find('CsnCms\Entity\Article', $id);
             $entityManager->remove($article);
-            $entityManager->flush();
+			$entityManager->flush();
         } catch (\Exception $ex) {
             echo $ex->getMessage(); // this will never be seen if you don't comment the redirect
 
