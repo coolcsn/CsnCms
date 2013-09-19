@@ -118,17 +118,29 @@ class ArticleController extends AbstractActionController
         if (!$id) {
             return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'article', 'action' => 'index'));
         }
-
+		
         $entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
-
-        try {
-            $repository = $entityManager->getRepository('CsnCms\Entity\Article');
-            $article = $repository->find($id);
-            $entityManager->remove($article);
-            $entityManager->flush();
-        } catch (\Exception $ex) {
-            echo $ex->getMessage(); // this will never be seen if you don't comment the redirect
-
+		
+        $repository = $entityManager->getRepository('CsnCms\Entity\Article');
+        $article = $repository->find($id);
+		
+		if($article) {
+		//Delete all comments first
+		$repository = $entityManager->getRepository('CsnCms\Entity\Comment');
+        $comments = $repository->find($id);
+		
+		if($comments){
+			foreach($comments as $comment){
+				$entityManager()->remove($comment);
+			}
+		}
+		
+		//Delete votes
+		$voteId = $article->getVote();
+		$entityManager->remove($voteId);
+		//Delete the article
+		$entityManager->remove($article);  
+		$entityManager->flush();
             return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'article', 'action' => 'index'));
         }
 

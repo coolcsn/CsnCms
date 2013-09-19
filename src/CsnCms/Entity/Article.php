@@ -163,7 +163,7 @@ class Article
     /**
      * @var Comment[]
      *
-     * @ORM\OneToMany(targetEntity="CsnCms\Entity\Comment", mappedBy="article")
+     * @ORM\OneToMany(targetEntity="CsnCms\Entity\Comment", mappedBy="article", cascade="remove")
      * @Annotation\Exclude()
      */
     protected $comments;
