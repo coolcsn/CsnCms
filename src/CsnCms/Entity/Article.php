@@ -31,7 +31,7 @@ use Zend\Form\Annotation;
 class Article
 {
     /**
-     * @ORM\OneToMany(targetEntity="CsnCms\Entity\Article", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="CsnCms\Entity\Article", mappedBy="parent", cascade="remove")
      * @Annotation\Exclude()
      */
     protected $children;

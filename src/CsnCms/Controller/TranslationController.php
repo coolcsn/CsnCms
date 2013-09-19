@@ -139,46 +139,106 @@ class TranslationController extends AbstractActionController
 
     public function viewAction()
     {
-        $id = $this->params()->fromRoute('id');
+       // $id = $this->params()->fromRoute('id');
+       // if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'index'));
+       //
+       // $id = (int) $this->params()->fromRoute('id2', 0);
+       // if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'index'), true);
+       //
+       // $entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+       //
+       // try {
+       //     $repository = $entityManager->getRepository('CsnCms\Entity\Article');
+       //     $article = $repository->find($id);
+       //     if (!is_object($article)) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'index'));
+       // } catch (\Exception $ex) {
+       //     echo $ex->getMessage(); // this never will be seen fi you don't comment the redirect
+       //
+       //     return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'index'));
+       // }
+       //
+       // $sm = $this->getServiceLocator();
+       // $auth = $sm->get('Zend\Authentication\AuthenticationService');
+       // $config = $sm->get('Config');
+       // $acl = new \CsnAuthorization\Acl\Acl($config);
+       // // everyone is guest untill it gets logged in
+       // $role = \CsnAuthorization\Acl\Acl::DEFAULT_ROLE;
+       // if ($auth->hasIdentity()) {
+       //     $user = $auth->getIdentity();
+       //     $role = $user->getRole()->getName();
+       // }
+       //
+       // $resource = $article->getResource()->getName();
+       // $privilege = 'view';
+       // if (!$acl->hasResource($resource)) {
+       //     throw new \Exception('Resource ' . $resource . ' not defined');
+       // }
+       //
+       // if (!$acl->isAllowed($role, $resource, $privilege)) {
+       //     return $this->redirect()->toRoute('home');
+       // }
+       //
+       // return new ViewModel(array('article' => $article));
+	   
+	    $id = $this->params()->fromRoute('id');
         if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'index'));
-
+       
         $id = (int) $this->params()->fromRoute('id2', 0);
         if (!$id) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'index'), true);
 
         $entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
 
         try {
-            $repository = $entityManager->getRepository('CsnCms\Entity\Article');
-            $article = $repository->find($id);
-            if (!is_object($article)) return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'index'));
+            $article = $entityManager->find('CsnCms\Entity\Article', $id);
+            if (!is_object($article)) {
+                return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'index'));
+            }
         } catch (\Exception $ex) {
-            echo $ex->getMessage(); // this never will be seen fi you don't comment the redirect
+            echo $ex->getMessage(); // this will never be seen if you don't comment the redirect
 
-            return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'translation', 'action' => 'index'));
+            return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'index', 'action' => 'index'));
         }
 
+        $counterViews = $article->getViewCount();
+        $counterViews +=1;
+        $article->setViewCount($counterViews);
+        $entityManager->persist($article);
+        $entityManager->flush();
+
+        //--- Decide whether the user has access to this article ---------------
         $sm = $this->getServiceLocator();
         $auth = $sm->get('Zend\Authentication\AuthenticationService');
         $config = $sm->get('Config');
         $acl = new \CsnAuthorization\Acl\Acl($config);
-        // everyone is guest untill it gets logged in
+        // everyone is guest until it gets logged in
         $role = \CsnAuthorization\Acl\Acl::DEFAULT_ROLE;
         if ($auth->hasIdentity()) {
             $user = $auth->getIdentity();
             $role = $user->getRole()->getName();
-        }
+    }
 
         $resource = $article->getResource()->getName();
         $privilege = 'view';
         if (!$acl->hasResource($resource)) {
-            throw new \Exception('Resource ' . $resource . ' not defined');
+                throw new \Exception('Resource ' . $resource . ' not defined');
         }
 
         if (!$acl->isAllowed($role, $resource, $privilege)) {
-            return $this->redirect()->toRoute('home');
+                return $this->redirect()->toRoute('home');
         }
+        //END --- Decide whether the user has access to this article -----------
 
-        return new ViewModel(array('article' => $article));
+        //--- Get all comments -------------------------------------------------
+        $dql = "SELECT c, a FROM CsnCms\Entity\Comment c LEFT JOIN c.article a WHERE a.id = ?1";
+        $query = $entityManager->createQuery($dql);
+        $query->setMaxResults(30);
+        $query->setParameter(1, $id);
+        $comments = $query->getResult();
+        //END --- Get all comments ---------------------------------------------
+		
+		$hasUserVoted = $this->hasUserVoted($article);
+		
+        return new ViewModel(array('article' => $article, 'comments' => $comments, 'hasUserVoted' => $hasUserVoted));
     }
 
     public function getForm($article, $entityManager, $action)
@@ -220,9 +280,29 @@ class TranslationController extends AbstractActionController
         $article->setAuthor($user);
 		
 		$vote = new \CsnCms\Entity\Vote();
-		echo '<pre>';
-		print_r($vote);
-		echo '</pre>';
 		$article->setVote($vote);
     }
+	
+	public function hasUserVoted($article)
+	{
+		$entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+		
+		$dql = "SELECT count(v.id) FROM CsnCms\Entity\Vote v LEFT JOIN v.usersVoted u WHERE v.id = ?0 AND u.id =?1";
+        $query = $entityManager->createQuery($dql);
+		
+		$articleId = $article->getVote()->getId();
+
+		$userId = $this->identity();
+		$hasUserVoted = 'no';
+		
+		if($articleId != null && $userId != null)
+		{
+			$userId = $this->identity()->getId();
+			$query->setParameter(0, $articleId);
+			$query->setParameter(1, $userId);
+			$hasUserVoted = $query->getSingleScalarResult();
+		}
+		
+		return $hasUserVoted;
+	}
 }

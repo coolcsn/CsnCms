@@ -1,2 +1,83 @@
-<h1><?php echo $article->getTitle(); ?></h1>
-<?php echo $article->getFullText(); ?>
+<article>
+    <?php 
+    $title = $article->getTitle();
+    $this->headTitle($title);
+    ?>
+    <h2><?php echo $this->escapeHtml($title); ?></h2>
+	<p><?php
+		if(!$hasUserVoted)
+		{
+			 ?></p>
+	
+	<a href="<?php echo $this->url('csn-cms/default',
+                            array('controller' => 'article', 'action'=>'vote', 'id' => $article->getId(), 'id2' => 1), true);?>">
+                    <?php echo $this->translate('Like');  ?>
+                </a>
+	<a href="<?php echo $this->url('csn-cms/default',
+                            array('controller' => 'article', 'action'=>'vote', 'id' => $article->getId(), 'id2' => 0), true);?>">
+                    <?php echo $this->translate('Dislike');  ?>
+                </a>
+    <p><?php } 
+	else if($hasUserVoted == 'no')
+	{
+		echo $this->translate('You have no permission for voting!');
+	}
+	else
+	{
+		echo $this->translate('You have already voted!');
+	}
+	?>
+	<p>
+	<?php $getLikeVotes = $article->getVote()->getLikesCount(); echo 'Likes: '. $getLikeVotes ;
+	 $getDislikeVotes = $article->getVote()->getDislikesCount(); echo 'Dislikes: '. $getDislikeVotes;
+	?>
+	</p>
+	<?php
+	$getCount = $article->getViewCount(); echo $getCount.' times previewed this Article.';
+	echo '</p><p>';
+	echo $article->getFullText();
+	echo '</p>';?>
+</article>
+    <?php if($article->getAllowComments()){ ?>
+        <hr>
+        <h3><?php echo $this->translate('Comments'); ?></h3>
+        <?php if($user = $this->identity()) :?>
+            <p><a href="<?php echo $this->url('csn-cms/default',
+                            array('controller' => 'comment', 'action'=>'add', 'id' => $article->getId()), true);?>">
+                    <?php echo $this->translate('Add new comment.'); ?>
+                </a>
+            </p>
+        <?php endif; ?>
+        <ul>
+            
+            <?php foreach ($comments as $comment) : ?>
+                <li>
+                    <h4><?php echo $this->escapeHtml($comment->getTitle());?></h4>
+                    <span>
+                        <?php
+                            echo $comment->getCreated()->format('F j, Y H:i'); 
+                            if (is_object($comment->getAuthor())) echo ' by ' . $this->escapeHtml($comment->getAuthor()->getUsername());
+                        ?>
+                    </span>
+                    <p><?php echo $this->escapeHtml($comment->getText());?></p>
+                    <?php
+                    //--- Check if Author or Admin and let them edit/delete article.
+                    if($user && is_object($article->getAuthor()) && is_object($comment->getAuthor())) :
+                        if ($user->getId()==$article->getAuthor()->getId() || $user->getId()==$comment->getAuthor()->getId()) : ?>
+                            <p>
+                                <a href="<?php echo $this->url('csn-cms/default',
+                                    array('controller' => 'comment', 'action'=>'edit', 'id2' => $comment->getId()), true);?>"> Edit | </a>
+                                <a href="<?php echo $this->url('csn-cms/default',
+                                    array('controller' => 'comment', 'action'=>'delete', 'id2' => $comment->getId()), true);?>" onclick="return confirm('Do you really want to delete the record?')">Delete</a>
+                            </p>
+                    <?php endif;
+                    endif; ?>
+                </li>
+            <?php endforeach; ?>
+                
+        </ul>
+            
+    <?php }else{ ?>
+        <hr>
+        <p><?php echo $this->translate('Comments are disabled for this article'); ?></p>
+    <?php }
