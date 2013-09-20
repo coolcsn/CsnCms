@@ -197,10 +197,9 @@ class ArticleController extends AbstractActionController {
         $comments = $query->getResult();
         //END --- Get all comments ---------------------------------------------
 
-        $hasUserVoted = $this->hasUserVoted($article);
         if ($article->getLayout()) {$this->layout($article->getLayout());}
 
-        return new ViewModel(array('article' => $article, 'comments' => $comments, 'hasUserVoted' => $hasUserVoted));
+        return new ViewModel(array('article' => $article, 'comments' => $comments));
     }
 
     public function voteAction() {
@@ -280,26 +279,5 @@ class ArticleController extends AbstractActionController {
         $vote = new \CsnCms\Entity\Vote();
         $article->setVote($vote);
     }
-
-    public function hasUserVoted($article) {
-        $entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
-
-        $dql = "SELECT count(v.id) FROM CsnCms\Entity\Vote v LEFT JOIN v.usersVoted u WHERE v.id = ?0 AND u.id =?1";
-        $query = $entityManager->createQuery($dql);
-
-        $articleId = $article->getVote()->getId();
-
-        $userId = $this->identity();
-        $hasUserVoted = 'no';
-
-        if ($articleId != null && $userId != null) {
-            $userId = $this->identity()->getId();
-            $query->setParameter(0, $articleId);
-            $query->setParameter(1, $userId);
-            $hasUserVoted = $query->getSingleScalarResult();
-        }
-
-        return $hasUserVoted;
-    }
-
+    
 }

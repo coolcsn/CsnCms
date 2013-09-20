@@ -4,39 +4,17 @@
     $this->headTitle($title);
     ?>
     <h2><?php echo $this->escapeHtml($title); ?></h2>
-	<p><?php
-		if(!$hasUserVoted)
-		{
-			 ?></p>
 	
-	<a href="<?php echo $this->url('csn-cms/default',
-                            array('controller' => 'article', 'action'=>'vote', 'id' => $article->getId(), 'id2' => 1), true);?>">
-                    <?php echo $this->translate('Like');  ?>
-                </a>
-	<a href="<?php echo $this->url('csn-cms/default',
-                            array('controller' => 'article', 'action'=>'vote', 'id' => $article->getId(), 'id2' => 0), true);?>">
-                    <?php echo $this->translate('Dislike');  ?>
-                </a>
-    <p><?php } 
-	else if($hasUserVoted == 'no')
-	{
-		echo $this->translate('Only registered users can vote.');
-	}
-	else
-	{
-		echo $this->translate('Already voted!');
-	}
-	?>
-	<p>
-	<?php $getLikeVotes = $article->getVote()->getLikesCount(); echo 'Likes: '. $getLikeVotes ;
-	 $getDislikeVotes = $article->getVote()->getDislikesCount(); echo 'Dislikes: '. $getDislikeVotes;
-	?>
-	</p>
-	<?php
+        <?php
+        
+        echo $this->vote(
+                $article->getVote(),
+                $this->url('csn-cms/default', array('controller' => 'article', 'action'=>'vote', 'id' => $article->getId(), 'id2' => 1)),
+                $this->url('csn-cms/default', array('controller' => 'article', 'action'=>'vote', 'id' => $article->getId(), 'id2' => 0))
+        );
+        
 	$getCount = $article->getViewCount(); echo $getCount . ' ' . $this->translate('views');
-	echo '</p><p>';
-	echo $article->getFullText();
-	echo '</p>';?>
+	echo $article->getFullText();?>
 </article>
     <?php if($article->getAllowComments()){ ?>
         <hr>

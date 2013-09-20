@@ -65,6 +65,18 @@ return array(
 
         'display_exceptions' => true,
     ),
+    'view_helpers' => array(
+        'factories' => array(
+            'vote' => function($sm) {
+              $sm = $sm->getServiceLocator(); // $sm was the view helper's locator
+              $em = $sm->get('doctrine.entitymanager.orm_default');
+
+              $helper = new \CsnCms\View\Helper\Vote($em);
+              return $helper;
+            }
+        ),
+    ),
+    
     'doctrine' => array(
         'driver' => array(
             __NAMESPACE__ . '_driver' => array(
