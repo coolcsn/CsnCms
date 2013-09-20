@@ -34,8 +34,6 @@ class Vote extends AbstractHelper {
         $hasUserVoted = $this->hasUserVoted($vote);
 
         $result = '<p>';
-?>
-        <?php
 
         switch ($hasUserVoted) {
             case -1:
