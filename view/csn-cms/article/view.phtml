@@ -20,11 +20,11 @@
     <p><?php } 
 	else if($hasUserVoted == 'no')
 	{
-		echo $this->translate('You have no permission for voting!');
+		echo $this->translate('Only registered users can vote.');
 	}
 	else
 	{
-		echo $this->translate('You have already voted!');
+		echo $this->translate('Already voted!');
 	}
 	?>
 	<p>
@@ -33,7 +33,7 @@
 	?>
 	</p>
 	<?php
-	$getCount = $article->getViewCount(); echo $getCount.' times previewed this Article.';
+	$getCount = $article->getViewCount(); echo $getCount . ' ' . $this->translate('views');
 	echo '</p><p>';
 	echo $article->getFullText();
 	echo '</p>';?>

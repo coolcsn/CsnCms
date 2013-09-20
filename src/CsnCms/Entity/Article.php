@@ -194,7 +194,17 @@ class Article
      * @Annotation\Exclude()
      */
     protected $vote = 0;
-
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="layout", type="string", nullable=true)
+     * @Annotation\Filter({"name":"StringTrim"})
+     * @Annotation\Attributes({"type":"text"})
+     * @Annotation\Options({"label":"Layout:"})
+     */
+    protected $layout;
+    
     /**
      * @var integer
      *
@@ -671,6 +681,29 @@ class Article
     public function setVote($vote)
     {
         $this->vote = $vote;
+
+        return $this;
+    }
+    
+    /**
+     * Get layout
+     *
+     * @return string
+     */
+    public function getLayout()
+    {
+        return $this->layout;
+    }
+
+    /**
+     * Set layout
+     *
+     * @param  string $layout
+     * @return Article
+     */
+    public function setLayout($layout)
+    {
+        $this->layout = $layout;
 
         return $this;
     }
