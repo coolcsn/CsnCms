@@ -78,15 +78,15 @@ class Article
     protected $author;
 
     /**
-     * @var CsnCms\Entity\Resource
+     * @var CsnAuthorization\Entity\Resource
      *
-     * @ORM\ManyToOne(targetEntity="CsnCms\Entity\Resource")
+     * @ORM\ManyToOne(targetEntity="CsnAuthorization\Entity\Resource")
      * @ORM\JoinColumn(name="resource_id", referencedColumnName="id")
      * @Annotation\Type("DoctrineModule\Form\Element\ObjectSelect")
      * @Annotation\Options({
      * "label":"Resource:",
      * "empty_option": "Please, choose the Resource",
-     * "target_class":"CsnCms\Entity\Resource",
+     * "target_class":"CsnAuthorization\Entity\Resource",
      * "property": "name"})
      */
     protected $resource;
@@ -272,7 +272,7 @@ class Article
     /**
      * Set resource
      *
-     * @param  CsnCms\Entity\Resource $resource
+     * @param  CsnAuthorization\Entity\Resource $resource
      * @return CsnCms\Entity\Article
      */
     public function setResource($resource)
@@ -285,7 +285,7 @@ class Article
     /**
      * Get resource
      *
-     * @return CsnCms\Entity\Resource
+     * @return CsnAuthorization\Entity\Resource
      */
     public function getResource()
     {
