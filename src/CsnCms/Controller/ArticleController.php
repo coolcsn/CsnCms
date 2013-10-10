@@ -170,7 +170,7 @@ class ArticleController extends AbstractActionController {
         $sm = $this->getServiceLocator();
         $auth = $sm->get('Zend\Authentication\AuthenticationService');
         $config = $sm->get('Config');
-        $acl = new \CsnAuthorization\Acl\Acl($config);
+        $acl = $sm->get('acl');
         // everyone is guest until it gets logged in
         $role = \CsnAuthorization\Acl\Acl::DEFAULT_ROLE;
         if ($auth->hasIdentity()) {
