@@ -16,14 +16,7 @@ else
 ?>
         <hr>
         <li>
-            <h3>
-                <a href="<?php echo $this->url('csn-cms/default', // SUPER IMPORTANT use csn-cms/<segment> NOT ONLY csn-cms
-                                    array('controller' => 'article', 'action'=>'view', 'id' => $article->getId()));?>">
-                <?php echo $this->escapeHtml($article->getTitle());?>
-                </a>
-            </h3>
-                <span><?php echo $article->getCreated()->format('F j, Y H:i'); if(is_object($article->getAuthor())) echo ' by ' . $this->escapeHtml($article->getAuthor()->getUsername());?></span>
-            <?php echo $article->getIntroText();?>
+            <?php echo $this->articleIntro($article->getId()); ?>
         </li>
 <?php
     endforeach;

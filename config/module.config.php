@@ -73,6 +73,13 @@ return array(
 
               $helper = new \CsnCms\View\Helper\Vote($em);
               return $helper;
+            },
+            'articleIntro' => function($sm) {
+              $sm = $sm->getServiceLocator(); // $sm was the view helper's locator
+              $em = $sm->get('doctrine.entitymanager.orm_default');
+
+              $helper = new \CsnCms\View\Helper\ArticleIntro($em);
+              return $helper;
             }
         ),
     ),

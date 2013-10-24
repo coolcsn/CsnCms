@@ -157,7 +157,15 @@ class ArticleController extends AbstractActionController {
 
             return $this->redirect()->toRoute('csn-cms/default', array('controller' => 'index', 'action' => 'index'));
         }
-        
+
+        //--- Decide whether the user has access to this article ---------------
+        $resource = $article->getResource()->getName();
+        $privilege = 'view';
+        if (!$this->isAllowed($resource, $privilege)) {
+            return $this->redirect()->toRoute('home');
+        }
+        //END --- Decide whether the user has access to this article -----------
+
         //--- Increase the View Count ------------------------------------------
         $counterViews = $article->getViewCount();
         $counterViews +=1;
@@ -165,30 +173,7 @@ class ArticleController extends AbstractActionController {
         $entityManager->persist($article);
         $entityManager->flush();
         //END --- Increase the View Count --------------------------------------
-
-        //--- Decide whether the user has access to this article ---------------
-        $sm = $this->getServiceLocator();
-        $auth = $sm->get('Zend\Authentication\AuthenticationService');
-        $config = $sm->get('Config');
-        $acl = $sm->get('acl');
-        // everyone is guest until it gets logged in
-        $role = \CsnAuthorization\Acl\Acl::DEFAULT_ROLE;
-        if ($auth->hasIdentity()) {
-            $user = $auth->getIdentity();
-            $role = $user->getRole()->getName();
-        }
-
-        $resource = $article->getResource()->getName();
-        $privilege = 'view';
-        if (!$acl->hasResource($resource)) {
-            throw new \Exception('Resource ' . $resource . ' not defined');
-        }
-
-        if (!$acl->isAllowed($role, $resource, $privilege)) {
-            return $this->redirect()->toRoute('home');
-        }
-        //END --- Decide whether the user has access to this article -----------
-
+        
         //--- Get all comments -------------------------------------------------
         $dql = "SELECT c, a FROM CsnCms\Entity\Comment c LEFT JOIN c.article a WHERE a.id = ?1";
         $query = $entityManager->createQuery($dql);
