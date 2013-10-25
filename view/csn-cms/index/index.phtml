@@ -13,10 +13,13 @@ else
 {
     echo '<ul>';
     foreach ($articles as $article) :
+        if (!$this->IsAllowed($article->getResource()->getName(), 'view')) {
+            continue;
+        }
 ?>
         <hr>
         <li>
-            <?php echo $this->articleIntro($article->getId()); ?>
+            <?php echo $this->articleIntro($article->getId(), 12); ?>
         </li>
 <?php
     endforeach;

@@ -25,26 +25,27 @@ class ArticleIntro extends AbstractHelper {
      * otherwise returns an empty string.
      * 
      * @param int $id
+     * @param int $indent Number of white spaces to prepend. Defaults to 0.
      * @throws Exception If an article with this id is not found.
      */
-    public function __invoke($id) {
+    public function __invoke($id, $indentSpaces = 0) {
         $article = $this->entityManager->find('CsnCms\Entity\Article', $id);
         if(!$article) {
             throw new \Exception('Article with id=' . $id . ' not found.');
         }
         if($this->getView()->isAllowed($article->getResource()->getName(), 'view')) {
-            return
-              '<article>'
-            . '    <h3>'
-                    . '<a href='
-                        . $this->getView()->url('csn-cms/default',
-                            array('controller' => 'article', 'action'=>'view', 'id' => $article->getId()))
-                        . '>'
-                    . $article->getTitle()
-                    . '</a>'
-            . '    </h3>'
-            . '    <p>' . $article->getIntrotext() . '</p>'
-            . '</article>';
+            $indent = \str_repeat(' ', $indentSpaces);
+            
+            $html  =           '<article>' . PHP_EOL;
+            $html .= $indent . '    <h3>' . PHP_EOL;
+            $html .= $indent . '        <a href="' . $this->getView()->url('csn-cms/default',
+                            array('controller' => 'article', 'action'=>'view', 'id' => $article->getId())) . '">'
+                            . $article->getTitle() . '</a>' . PHP_EOL;
+            $html .= $indent . '    </h3>' . PHP_EOL;
+            $html .= $indent . '    <p class="article-introtext">' . $article->getIntrotext() . '</p>' . PHP_EOL;
+            $html .= $indent . '</article>' . PHP_EOL;
+            
+            return $html;
         } else {
             return "";
         }
