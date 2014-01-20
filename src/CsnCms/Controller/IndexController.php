@@ -34,6 +34,8 @@ class IndexController extends AbstractActionController
 
         $dql1 = '';
         $mostC = '';
+		$mostCommentedArticles = Array();
+		$countOfComments = Array();
         foreach ($result as $resul) {
             $dql1 = "SELECT a FROM CsnCms\Entity\Article a where a.id = ". $resul['id'];
             //echo $dql1;
